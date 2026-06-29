@@ -190,6 +190,17 @@ a {
   color: rgb(148 163 184 / 0.85);
 }
 
+select.field {
+  color: #fff;
+  background-color: rgb(10 18 32 / 0.72);
+}
+
+select.field option,
+select.field optgroup {
+  background-color: #fff;
+  color: #172033;
+}
+
 .label {
   display: grid;
   gap: 0.4rem;
@@ -489,19 +500,24 @@ a {
   padding-block: clamp(3.5rem, 8vw, 5.5rem);
 }
 
-.admin-surface {
-  background: rgb(255 255 255 / 0.96);
-  color: #172033;
+.admin-table thead {
+  background: rgb(255 255 255 / 0.06);
+  color: var(--foreground);
 }
 
-.admin-surface .field {
-  border-color: #d7dde7;
-  background: white;
-  color: #172033;
+.admin-table th,
+.admin-table td {
+  padding: 0.75rem;
+  vertical-align: top;
 }
 
-.admin-surface .label {
-  color: #172033;
+.admin-table tbody tr {
+  border-top: 1px solid var(--line);
+  transition: background 160ms ease;
+}
+
+.admin-table tbody tr:hover {
+  background: rgb(255 255 255 / 0.03);
 }
 
 @media (prefers-reduced-motion: reduce) {

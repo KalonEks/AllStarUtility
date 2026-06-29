@@ -1,6 +1,6 @@
 # Deploy to Vercel (prototype / preview)
 
-Use this for stakeholder demos of design and copy. Backend features (form saves, owner dashboard, email) are optional until production.
+Use this for stakeholder demos of design and copy. Backend features (form saves, admin dashboard, email) are optional until production.
 
 ## One-time setup (about 5 minutes)
 
@@ -27,7 +27,7 @@ Remove or set `NEXT_PUBLIC_DEMO_MODE` to `false` when you connect the real backe
 
 ## Production environment variables
 
-When you are ready for live inquiries and the owner dashboard, add these in **Vercel → Project → Settings → Environment Variables**:
+When you are ready for live inquiries and the admin dashboard, add these in **Vercel → Project → Settings → Environment Variables**:
 
 ```
 DATABASE_URL=
@@ -47,7 +47,7 @@ After adding `DATABASE_URL`, run migrations locally:
 
 ```bash
 npm run db:migrate
-npm run seed:owner -- --email you@example.com --password "your-temp-password" --role OWNER
+npm run seed:admin -- --email you@example.com --password "your-temp-password" --role ADMIN
 ```
 
 ## CLI deploy (optional)
@@ -68,7 +68,7 @@ npx vercel --prod
 | Home, services, about, contact UI | Yes | Yes |
 | Multi-step form UI | Yes | Yes |
 | Form submission / email | No | Yes |
-| Owner login / dashboard | No | Yes |
+| Admin login / dashboard | No | Yes |
 
 ## Custom domain (later)
 

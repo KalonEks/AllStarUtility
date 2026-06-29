@@ -56,7 +56,7 @@ Recommended scripts:
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
-    "seed:owner": "tsx scripts/seed-owner.ts"
+    "seed:admin": "tsx scripts/seed-admin.ts"
   }
 }
 ```
@@ -85,7 +85,7 @@ Manual owner/admin setup flow:
 Example seed command shape:
 
 ```bash
-npm run seed:owner -- --email owner@example.com --password "temporary-password" --role OWNER
+npm run seed:admin -- --email admin@example.com --password "temporary-password" --role ADMIN
 ```
 
 The seed script must hash the password before insert. Never store plaintext passwords.

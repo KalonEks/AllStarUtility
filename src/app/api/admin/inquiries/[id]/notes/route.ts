@@ -5,7 +5,7 @@ import { getSession } from "@/lib/security";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
-  if (!session) redirect("/owner/login");
+  if (!session) redirect("/admin/login");
   const { id } = await params;
   const form = await request.formData();
   const note = String(form.get("note") || "").trim();
@@ -18,5 +18,5 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       createdByUserId: session.userId,
     });
   }
-  redirect(`/owner/inquiries/${id}`);
+  redirect(`/admin/inquiries/${id}`);
 }

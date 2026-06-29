@@ -11,10 +11,10 @@ function readArg(name: string) {
 async function main() {
   const email = readArg("email")?.toLowerCase();
   const password = readArg("password");
-  const role = (readArg("role") || "OWNER").toUpperCase() as "OWNER" | "ADMIN";
+  const role = (readArg("role") || "ADMIN").toUpperCase() as "OWNER" | "ADMIN";
 
   if (!email || !password) {
-    throw new Error('Usage: npm run seed:owner -- --email owner@example.com --password "temporary-password" --role OWNER');
+    throw new Error('Usage: npm run seed:admin -- --email admin@example.com --password "temporary-password" --role ADMIN');
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
@@ -22,12 +22,12 @@ async function main() {
   const [existing] = await db.select().from(users).where(eq(users.email, email)).limit(1);
   if (existing) {
     await db.update(users).set({ passwordHash, role, isActive: true, updatedAt: new Date() }).where(eq(users.id, existing.id));
-    console.log(`Updated owner/admin user ${email}`);
+    console.log(`Updated admin user ${email}`);
     return;
   }
 
   await db.insert(users).values({ email, passwordHash, role, isActive: true });
-  console.log(`Created owner/admin user ${email}`);
+  console.log(`Created admin user ${email}`);
 }
 
 main().catch((error) => {

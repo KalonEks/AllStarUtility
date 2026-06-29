@@ -5,7 +5,7 @@ import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { SiteBackdrop } from "@/components/site-backdrop";
 import { TrackingEvents } from "@/components/tracking-events";
-import { business, siteUrl } from "@/lib/site";
+import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -50,12 +50,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <main className="relative flex-1">{children}</main>
         <Footer />
         <TrackingEvents />
-        <a
-          className="fixed inset-x-4 bottom-4 z-40 flex items-center justify-center rounded-xl bg-[#d71920] px-4 py-3 text-center text-sm font-black text-white shadow-lg shadow-red-950/40 md:hidden"
-          href={`tel:${business.emergencyPhoneHref}`}
-        >
-          Emergency sewer/water: {business.emergencyPhone}
-        </a>
       </body>
     </html>
   );

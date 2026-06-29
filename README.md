@@ -8,7 +8,7 @@ Next.js App Router rebuild for All-Star Utilities based on the documents in `doc
 - Tailwind CSS
 - Supabase/Postgres via Drizzle ORM
 - Resend for transactional email
-- Custom owner/admin session auth with bcrypt password hashes
+- Custom admin session auth with bcrypt password hashes
 - Cloudflare Turnstile-ready form protection
 
 ## Local Development
@@ -26,7 +26,7 @@ Set `DATABASE_URL` in `.env.local`, then run:
 
 ```bash
 npm run db:migrate
-npm run seed:owner -- --email owner@example.com --password "temporary-password" --role OWNER
+npm run seed:admin -- --email admin@example.com --password "temporary-password" --role ADMIN
 ```
 
 The migration lives in `drizzle/`.
@@ -39,5 +39,5 @@ npm run build
 npm run db:generate
 npm run db:migrate
 npm run db:studio
-npm run seed:owner
+npm run seed:admin
 ```

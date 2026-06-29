@@ -14,8 +14,8 @@
    - `inquiry_notes`
    - `inquiry_events`
    - `email_events`
-7. Run `npm run seed:owner -- --email OWNER_EMAIL --password "TEMPORARY_PASSWORD" --role OWNER`.
-8. Replace `OWNER_EMAIL` with the owner's actual login email.
+7. Run `npm run seed:admin -- --email ADMIN_EMAIL --password "TEMPORARY_PASSWORD" --role ADMIN`.
+8. Replace `ADMIN_EMAIL` with the admin user's actual login email.
 9. Replace `TEMPORARY_PASSWORD` with a strong temporary password, then store it securely.
 
 ## 2. Required environment placeholders
@@ -106,8 +106,8 @@
 7. Test:
    - `/`
    - `/contact`
-   - `/owner/login`
-   - `/owner/inquiries`
+   - `/admin/login`
+   - `/admin/inquiries`
    - `/sitemap.xml`
    - `/robots.txt`
    - `/llms.txt`

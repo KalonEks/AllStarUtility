@@ -179,10 +179,10 @@ Primary navigation:
 
 Private routes:
 
-- `/owner/login`
-- `/owner/inquiries`
-- `/owner/inquiries/[id]`
-- `/owner/settings` future-ready, optional in phase one
+- `/admin/login`
+- `/admin/inquiries`
+- `/admin/inquiries/[id]`
+- `/admin/settings` future-ready, optional in phase one
 
 Utility pages:
 
@@ -365,7 +365,7 @@ Anti-spam and quality:
 
 Login:
 
-- Route: `/owner/login`
+- Route: `/admin/login`
 - Fields: email address and password
 - No public sign-up.
 - No password reset in phase one unless specifically requested.
@@ -384,7 +384,7 @@ Authorization:
 
 Dashboard:
 
-- Route: `/owner/inquiries`
+- Route: `/admin/inquiries`
 - Show all free consultation inquiries.
 - Search by name, phone, email, address, service type, city, status.
 - Filter by status, urgency, property type, date range, source, assigned user future-ready.

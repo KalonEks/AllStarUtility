@@ -41,7 +41,7 @@ export async function sendInquiryEmail(inquiry: InquiryRow) {
         `Urgency: ${inquiry.urgency}`,
         `Message: ${inquiry.message}`,
         `Source: ${inquiry.utmSource || inquiry.source || "direct/unknown"}`,
-        `Dashboard: ${(process.env.APP_URL || "http://localhost:3000")}/owner/inquiries/${inquiry.id}`,
+        `Dashboard: ${(process.env.APP_URL || "http://localhost:3000")}/admin/inquiries/${inquiry.id}`,
       ].join("\n"),
     });
     await db.insert(emailEvents).values({
