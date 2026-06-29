@@ -62,8 +62,10 @@ const defaultFormData: ConsultationFormData = {
 };
 
 const SESSION_STORAGE_KEY = "asu_consultation_session_id";
+const DEMO_SESSION_ID = "demo-session";
 
 export function ConsultationForm({ defaultService }: { defaultService?: string }) {
+  const demoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
   const [step, setStep] = useState(1);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [formData, setFormData] = useState<ConsultationFormData>({
@@ -95,7 +97,7 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
     trackingRef.current = captured;
 
     const storedSessionId = window.sessionStorage.getItem(SESSION_STORAGE_KEY);
-    if (!storedSessionId) return;
+    if (!storedSessionId || demoMode) return;
 
     fetch(`/api/inquiries/sessions/${storedSessionId}`)
       .then((response) => (response.ok ? response.json() : null))
@@ -109,7 +111,7 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
         setFormData((current) => ({ ...current, ...body.payload }));
       })
       .catch(() => window.sessionStorage.removeItem(SESSION_STORAGE_KEY));
-  }, []);
+  }, [demoMode]);
 
   useEffect(() => {
     if (!turnstileSiteKey || step !== 4 || !turnstileRef.current) return;
@@ -209,6 +211,18 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
     setStatus("saving");
     setMessage("");
 
+    if (demoMode) {
+      if (step === 1 && eventType === "step_completed" && !sessionId) {
+        setSessionId(DEMO_SESSION_ID);
+        window.sessionStorage.setItem(SESSION_STORAGE_KEY, DEMO_SESSION_ID);
+      }
+      setStep((current) =>
+        eventType === "step_back" ? Math.max(current - 1, 1) : Math.min(current + 1, STEPS.length),
+      );
+      setStatus("idle");
+      return true;
+    }
+
     try {
       if (step === 1 && eventType === "step_completed" && !sessionId) {
         const response = await fetch("/api/inquiries/sessions", {
@@ -290,6 +304,16 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
     setStatus("submitting");
     setMessage("");
 
+    if (demoMode) {
+      setStatus("success");
+      setMessage("Demo preview: your request was not submitted. This preview is for design and wording review only.");
+      window.sessionStorage.removeItem(SESSION_STORAGE_KEY);
+      setSessionId(null);
+      setStep(1);
+      setFormData({ ...defaultFormData, serviceNeeded: defaultService || "" });
+      return;
+    }
+
     const response = await fetch(`/api/inquiries/sessions/${sessionId}/submit`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -355,6 +379,12 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
 
       <form onSubmit={onSubmit} className="grid gap-4">
         <input type="text" name="companyWebsite" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" value={formData.companyWebsite} onChange={() => undefined} />
+
+        {demoMode ? (
+          <p className="rounded-lg border border-[#3b8ff0]/35 bg-[#3b8ff0]/10 px-4 py-3 text-center text-sm font-bold text-[#3b8ff0]">
+            Demo preview mode — form submissions are disabled.
+          </p>
+        ) : null}
 
         {step === 1 ? (
           <>
