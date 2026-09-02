@@ -36,7 +36,7 @@ Change this again when the custom domain is live. It drives sitemap, robots, Ope
 
 ### 3. Connect Supabase + migrate
 
-Your project is already referenced in the repo: `pwzikcmxpcljhhhpjnad.supabase.co`.
+Your project is already referenced in the repo: `fmhwronbxxthqxvryfrx.supabase.co`.
 
 1. Supabase → **Project Settings → Database → Connection string**
 2. Locally: copy `.env.example` → `.env.local`, put the real `DATABASE_URL` in

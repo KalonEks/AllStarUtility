@@ -2,11 +2,11 @@
 
 ## 1. Supabase database setup
 
-1. Open the Supabase project at `https://pwzikcmxpcljhhhpjnad.supabase.co`.
+1. Open the Supabase project at `https://fmhwronbxxthqxvryfrx.supabase.co`.
 2. In Supabase, get the Postgres connection string from Project Settings -> Database -> Connection string.
 3. Create `.env.local` from `.env.example`.
 4. Replace `DATABASE_URL` with the real Supabase Postgres URL. The placeholder is:
-   - `postgres://postgres:[PASSWORD]@db.pwzikcmxpcljhhhpjnad.supabase.co:5432/postgres?sslmode=require`
+   - `postgres://postgres:[PASSWORD]@db.fmhwronbxxthqxvryfrx.supabase.co:5432/postgres?sslmode=require`
 5. Replace `[PASSWORD]` with the database password from Supabase.
 6. Run `npm run db:migrate` to create:
    - `users`

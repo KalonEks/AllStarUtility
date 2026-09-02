@@ -44,6 +44,20 @@ export async function sendInquiryEmail(inquiry: InquiryRow) {
         `Dashboard: ${(process.env.APP_URL || "http://localhost:3000")}/admin/inquiries/${inquiry.id}`,
       ].join("\n"),
     });
+
+    if (result.error) {
+      await db.insert(emailEvents).values({
+        inquiryId: inquiry.id,
+        provider,
+        toEmail: to,
+        fromEmail: from,
+        subject,
+        status: "failed",
+        error: result.error.message,
+      });
+      return;
+    }
+
     await db.insert(emailEvents).values({
       inquiryId: inquiry.id,
       provider,
