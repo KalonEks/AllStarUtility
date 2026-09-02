@@ -3,10 +3,12 @@ import { eq } from "drizzle-orm";
 import { consultationSessionEvents, consultationSessions } from "@/db/schema";
 import { mergeSessionPayload } from "@/lib/consultation-session";
 import { getDb } from "@/lib/db";
+import { sanitizeRecord } from "@/lib/sanitize";
 import {
   personalInfoStepSchema,
   propertyDetailsStepSchema,
   serviceDetailsStepSchema,
+  submitStepSchema,
   updateSessionSchema,
 } from "@/lib/validation";
 
@@ -16,7 +18,8 @@ function validateStepData(step: number, data: Record<string, unknown>) {
   if (step === 1) return personalInfoStepSchema.safeParse(data);
   if (step === 2) return propertyDetailsStepSchema.safeParse(data);
   if (step === 3) return serviceDetailsStepSchema.safeParse(data);
-  return { success: true as const, data };
+  if (step === 4) return submitStepSchema.safeParse(data);
+  return { success: false as const };
 }
 
 export async function GET(_request: NextRequest, context: RouteContext) {
@@ -50,12 +53,19 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     return NextResponse.json({ error: "Session not found." }, { status: 404 });
   }
 
-  const stepValidation = parsed.data.eventType === "step_completed" ? validateStepData(parsed.data.step, parsed.data.data) : { success: true as const, data: parsed.data.data };
+  const incoming = sanitizeRecord(parsed.data.data);
+  const stepValidation =
+    parsed.data.eventType === "step_completed"
+      ? validateStepData(parsed.data.step, incoming)
+      : { success: true as const, data: incoming };
   if (!stepValidation.success) {
     return NextResponse.json({ error: "Please check the required fields and try again." }, { status: 400 });
   }
 
-  const payload = mergeSessionPayload(existing.payload as Record<string, unknown>, parsed.data.data);
+  const payload = mergeSessionPayload(
+    existing.payload as Record<string, unknown>,
+    stepValidation.data as Record<string, unknown>,
+  );
   const nextStep =
     parsed.data.eventType === "step_back"
       ? Math.max(parsed.data.step - 1, 1)

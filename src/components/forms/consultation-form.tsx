@@ -2,24 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, Phone, Send } from "lucide-react";
-import { serviceNeededOptions } from "@/lib/content";
+import { serviceNeededOptions, propertyTypes, urgencyOptions } from "@/lib/content";
+import { serviceNeededValues } from "@/lib/validation";
 import { business } from "@/lib/site";
-import type { ConsultationFormData } from "@/lib/validation";
+import type { ConsultationFormState } from "@/lib/validation";
 import {
   personalInfoStepSchema,
   propertyDetailsStepSchema,
   serviceDetailsStepSchema,
   submitStepSchema,
 } from "@/lib/validation";
-
-declare global {
-  interface Window {
-    turnstile?: {
-      render: (element: HTMLElement, options: { sitekey: string; callback: (token: string) => void }) => string;
-      reset: (widgetId?: string) => void;
-    };
-  }
-}
 
 const STEPS = [
   "Personal Information",
@@ -28,22 +20,7 @@ const STEPS = [
   "Submit Request",
 ] as const;
 
-const propertyTypes = [
-  ["residential", "Residential"],
-  ["commercial", "Commercial"],
-  ["builder-developer", "Builder / Developer"],
-  ["property-manager", "Property Manager"],
-  ["other", "Other"],
-];
-
-const urgencyOptions = [
-  ["planning-quote-only", "Planning / Quote Only"],
-  ["this-week", "This Week"],
-  ["within-24-hours", "Within 24 Hours"],
-  ["emergency-now", "Emergency Now"],
-];
-
-const defaultFormData: ConsultationFormData = {
+const defaultFormData: ConsultationFormState = {
   firstName: "",
   lastName: "",
   email: "",
@@ -66,6 +43,13 @@ const SESSION_STORAGE_KEY = "asu_consultation_session_id";
 const DEMO_SESSION_ID = "demo-session";
 const RECEIPT_HEADING_ID = "consultation-receipt-heading";
 
+function presetService(value?: string): ConsultationFormState["serviceNeeded"] {
+  if (value && (serviceNeededValues as readonly string[]).includes(value)) {
+    return value as ConsultationFormState["serviceNeeded"];
+  }
+  return "";
+}
+
 function optionLabel(options: ReadonlyArray<readonly string[]>, value: string) {
   return options.find((option) => option[0] === value)?.[1] ?? value;
 }
@@ -74,17 +58,14 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
   const demoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
   const [step, setStep] = useState(1);
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [formData, setFormData] = useState<ConsultationFormData>({
+  const [formData, setFormData] = useState<ConsultationFormState>({
     ...defaultFormData,
-    serviceNeeded: defaultService || "",
+    serviceNeeded: presetService(defaultService),
   });
   const [status, setStatus] = useState<"idle" | "saving" | "submitting" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const trackingRef = useRef<Record<string, string>>({});
-  const turnstileRef = useRef<HTMLDivElement>(null);
-  const widgetIdRef = useRef<string | null>(null);
-  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -119,31 +100,7 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
       .catch(() => window.sessionStorage.removeItem(SESSION_STORAGE_KEY));
   }, [demoMode]);
 
-  useEffect(() => {
-    if (!turnstileSiteKey || step !== 4 || !turnstileRef.current) return;
-
-    const renderWidget = () => {
-      if (!window.turnstile || !turnstileRef.current || widgetIdRef.current) return;
-      widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
-        sitekey: turnstileSiteKey,
-        callback: (token) => setFormData((current) => ({ ...current, turnstileToken: token })),
-      });
-    };
-
-    if (window.turnstile) {
-      renderWidget();
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
-    script.async = true;
-    script.defer = true;
-    script.onload = renderWidget;
-    document.head.appendChild(script);
-  }, [step, turnstileSiteKey]);
-
-  function updateField(name: keyof ConsultationFormData, value: string | boolean) {
+  function updateField(name: keyof ConsultationFormState, value: string | boolean) {
     setFormData((current) => ({ ...current, [name]: value }));
     setFieldErrors((current) => {
       const next = { ...current };
@@ -327,7 +284,6 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
       setStatus("success");
       window.sessionStorage.removeItem(SESSION_STORAGE_KEY);
       setSessionId(null);
-      setTurnstileTokenReset();
       window.dispatchEvent(new CustomEvent("asu:consultation-submitted"));
       return;
     }
@@ -337,20 +293,13 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
     setMessage(body?.error || "The form could not be submitted. Please call All-Star Utilities if the issue is urgent.");
   }
 
-  function setTurnstileTokenReset() {
-    setFormData((current) => ({ ...current, turnstileToken: "" }));
-    widgetIdRef.current = null;
-    window.turnstile?.reset(widgetIdRef.current || undefined);
-  }
-
   function startAnotherRequest() {
     setStatus("idle");
     setStep(1);
-    setFormData({ ...defaultFormData, serviceNeeded: defaultService || "" });
+    setFormData({ ...defaultFormData, serviceNeeded: presetService(defaultService) });
     setFieldErrors({});
     setMessage("");
     setSessionId(null);
-    widgetIdRef.current = null;
     window.sessionStorage.removeItem(SESSION_STORAGE_KEY);
   }
 
@@ -516,7 +465,6 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
               I consent to All-Star Utilities storing this inquiry and contacting me about the requested sewer, water, excavation, or pipe lining service.
             </label>
             {fieldErrors.consent ? <span className="text-xs font-bold text-[#f87171]">{fieldErrors.consent}</span> : null}
-            {turnstileSiteKey ? <div ref={turnstileRef} /> : null}
           </>
         ) : null}
 
@@ -564,7 +512,7 @@ function ConsultationReceipt({
   demoMode,
   onStartAnother,
 }: {
-  data: ConsultationFormData;
+  data: ConsultationFormState;
   demoMode: boolean;
   onStartAnother: () => void;
 }) {

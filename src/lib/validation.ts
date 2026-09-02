@@ -1,43 +1,82 @@
 import { z } from "zod";
+import { propertyTypes, serviceNeededOptions, urgencyOptions } from "@/lib/content";
+import { sanitizePhone, sanitizePlainText, sanitizeZip } from "@/lib/sanitize";
+
+function optionValues<T extends readonly (readonly [string, string])[]>(options: T) {
+  return options.map(([value]) => value) as [T[number][0], ...T[number][0][]];
+}
+
+export const propertyTypeValues = optionValues(propertyTypes);
+export const serviceNeededValues = optionValues(serviceNeededOptions);
+export const urgencyValues = optionValues(urgencyOptions);
+
+function plainText(max: number, options?: { min?: number; message?: string; multiline?: boolean }) {
+  return z
+    .string()
+    .transform((value) => sanitizePlainText(value, { max, multiline: options?.multiline }))
+    .pipe(z.string().min(options?.min ?? 0, options?.message).max(max));
+}
+
+function optionalPlainText(max: number, options?: { multiline?: boolean }) {
+  return z
+    .string()
+    .transform((value) => sanitizePlainText(value, { max, multiline: options?.multiline }))
+    .pipe(z.string().max(max))
+    .optional()
+    .or(z.literal(""));
+}
 
 const trackingFields = {
-  landingPage: z.string().max(600).optional().or(z.literal("")),
-  referrer: z.string().max(600).optional().or(z.literal("")),
-  utm_source: z.string().max(200).optional().or(z.literal("")),
-  utm_medium: z.string().max(200).optional().or(z.literal("")),
-  utm_campaign: z.string().max(200).optional().or(z.literal("")),
-  utm_term: z.string().max(200).optional().or(z.literal("")),
-  utm_content: z.string().max(200).optional().or(z.literal("")),
-  gclid: z.string().max(300).optional().or(z.literal("")),
-  gbraid: z.string().max(300).optional().or(z.literal("")),
-  wbraid: z.string().max(300).optional().or(z.literal("")),
+  landingPage: optionalPlainText(600),
+  referrer: optionalPlainText(600),
+  utm_source: optionalPlainText(200),
+  utm_medium: optionalPlainText(200),
+  utm_campaign: optionalPlainText(200),
+  utm_term: optionalPlainText(200),
+  utm_content: optionalPlainText(200),
+  gclid: optionalPlainText(300),
+  gbraid: optionalPlainText(300),
+  wbraid: optionalPlainText(300),
 };
 
 export const personalInfoStepSchema = z.object({
-  firstName: z.string().trim().min(1, "First name is required.").max(80),
-  lastName: z.string().trim().min(1, "Last name is required.").max(80),
-  email: z.email("Enter a valid email address.").max(160),
-  phone: z.string().trim().min(7, "Enter a valid phone number.").max(30),
+  firstName: plainText(80, { min: 1, message: "First name is required." }),
+  lastName: plainText(80, { min: 1, message: "Last name is required." }),
+  email: z
+    .string()
+    .transform((value) => sanitizePlainText(value, { max: 160 }).toLowerCase())
+    .pipe(z.email("Enter a valid email address.").max(160)),
+  phone: z
+    .string()
+    .transform((value) => sanitizePhone(value).slice(0, 30))
+    .pipe(z.string().min(7, "Enter a valid phone number.").max(30)),
 });
 
 export const propertyDetailsStepSchema = z.object({
-  propertyType: z.string().trim().min(2).max(80),
-  serviceAddress: z.string().trim().min(3, "Service address is required.").max(180),
-  city: z.string().trim().min(2, "City is required.").max(100),
-  state: z.string().trim().min(2).max(40),
-  zip: z.string().regex(/^\d{5}(-\d{4})?$/, "Enter a valid ZIP code."),
+  propertyType: z.enum(propertyTypeValues, { message: "Select a property type." }),
+  serviceAddress: plainText(180, { min: 3, message: "Service address is required." }),
+  city: plainText(100, { min: 2, message: "City is required." }),
+  state: plainText(40, { min: 2 }),
+  zip: z
+    .string()
+    .transform((value) => sanitizeZip(value))
+    .pipe(z.string().regex(/^\d{5}(-\d{4})?$/, "Enter a valid ZIP code.")),
 });
 
 export const serviceDetailsStepSchema = z.object({
-  serviceNeeded: z.string().trim().min(1, "Select a service."),
-  urgency: z.string().trim().min(2, "Select an urgency level.").max(80),
-  message: z.string().trim().min(5, "Describe the current issue.").max(4000),
+  serviceNeeded: z.enum(serviceNeededValues, { message: "Select a service." }),
+  urgency: z.enum(urgencyValues, { message: "Select an urgency level." }),
+  message: plainText(4000, { min: 5, message: "Describe the current issue.", multiline: true }),
 });
 
 export const submitStepSchema = z.object({
-  additionalDetails: z.string().trim().max(4000).optional().or(z.literal("")),
+  additionalDetails: optionalPlainText(4000, { multiline: true }),
   consent: z.boolean().refine((value) => value, "Consent is required."),
-  companyWebsite: z.string().max(0).optional().or(z.literal("")),
+  companyWebsite: z
+    .string()
+    .transform((value) => sanitizePlainText(value, { max: 200 }))
+    .optional()
+    .or(z.literal("")),
   turnstileToken: z.string().optional(),
 });
 
@@ -61,33 +100,46 @@ export const updateSessionSchema = z.object({
 export const submitSessionSchema = consultationFormSchema.merge(z.object(trackingFields));
 
 export const inquirySchema = z.object({
-  firstName: z.string().trim().min(1).max(80),
-  lastName: z.string().trim().min(1).max(80),
-  email: z.email().max(160),
-  phone: z.string().trim().min(7).max(30),
-  serviceAddress: z.string().trim().min(3).max(180),
-  city: z.string().trim().min(2).max(100),
-  state: z.string().trim().min(2).max(40),
-  zip: z.string().regex(/^\d{5}(-\d{4})?$/),
-  propertyType: z.string().trim().min(2).max(80),
-  serviceNeeded: z.array(z.string().min(1)).min(1),
-  urgency: z.string().trim().min(2).max(80),
-  message: z.string().trim().min(5).max(4000),
-  currentIssue: z.string().trim().max(500).optional().or(z.literal("")),
-  bestContactTime: z.string().trim().max(120).optional().or(z.literal("")),
-  howHeard: z.string().trim().max(120).optional().or(z.literal("")),
+  firstName: plainText(80, { min: 1 }),
+  lastName: plainText(80, { min: 1 }),
+  email: z
+    .string()
+    .transform((value) => sanitizePlainText(value, { max: 160 }).toLowerCase())
+    .pipe(z.email().max(160)),
+  phone: z
+    .string()
+    .transform((value) => sanitizePhone(value).slice(0, 30))
+    .pipe(z.string().min(7).max(30)),
+  serviceAddress: plainText(180, { min: 3 }),
+  city: plainText(100, { min: 2 }),
+  state: plainText(40, { min: 2 }),
+  zip: z
+    .string()
+    .transform((value) => sanitizeZip(value))
+    .pipe(z.string().regex(/^\d{5}(-\d{4})?$/)),
+  propertyType: z.enum(propertyTypeValues),
+  serviceNeeded: z.array(z.enum(serviceNeededValues)).min(1),
+  urgency: z.enum(urgencyValues),
+  message: plainText(4000, { min: 5, multiline: true }),
+  currentIssue: optionalPlainText(500, { multiline: true }),
+  bestContactTime: optionalPlainText(120),
+  howHeard: optionalPlainText(120),
   consent: z.boolean().refine((value) => value, "Consent is required."),
-  companyWebsite: z.string().max(0).optional().or(z.literal("")),
-  landingPage: z.string().max(600).optional().or(z.literal("")),
-  referrer: z.string().max(600).optional().or(z.literal("")),
-  utm_source: z.string().max(200).optional().or(z.literal("")),
-  utm_medium: z.string().max(200).optional().or(z.literal("")),
-  utm_campaign: z.string().max(200).optional().or(z.literal("")),
-  utm_term: z.string().max(200).optional().or(z.literal("")),
-  utm_content: z.string().max(200).optional().or(z.literal("")),
-  gclid: z.string().max(300).optional().or(z.literal("")),
-  gbraid: z.string().max(300).optional().or(z.literal("")),
-  wbraid: z.string().max(300).optional().or(z.literal("")),
+  companyWebsite: z
+    .string()
+    .transform((value) => sanitizePlainText(value, { max: 200 }))
+    .optional()
+    .or(z.literal("")),
+  landingPage: optionalPlainText(600),
+  referrer: optionalPlainText(600),
+  utm_source: optionalPlainText(200),
+  utm_medium: optionalPlainText(200),
+  utm_campaign: optionalPlainText(200),
+  utm_term: optionalPlainText(200),
+  utm_content: optionalPlainText(200),
+  gclid: optionalPlainText(300),
+  gbraid: optionalPlainText(300),
+  wbraid: optionalPlainText(300),
   turnstileToken: z.string().optional(),
 });
 
@@ -97,3 +149,6 @@ export const loginSchema = z.object({
 });
 
 export type ConsultationFormData = z.infer<typeof consultationFormSchema>;
+export type ConsultationFormState = Omit<ConsultationFormData, "serviceNeeded"> & {
+  serviceNeeded: ConsultationFormData["serviceNeeded"] | "";
+};

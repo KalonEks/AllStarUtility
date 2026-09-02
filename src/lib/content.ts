@@ -92,6 +92,7 @@ export const trustPoints = [
 ];
 
 export const serviceNeededOptions = [
+  ["not-sure", "Unsure - Need Professional Evaluation"],
   ["sewer-line-repair", "Sewer Line Repair"],
   ["sewer-line-replacement", "Sewer Line Replacement"],
   ["water-line-repair", "Water Line Repair"],
@@ -101,7 +102,21 @@ export const serviceNeededOptions = [
   ["manhole-catch-basin-storm-sewer", "Manhole / Catch Basin / Storm Sewer"],
   ["fire-hydrant-water-main", "Fire Hydrant / Water Main"],
   ["emergency-sewer-water", "Emergency Sewer / Water Issue"],
-  ["not-sure", "Unsure - Need Professional Evaluation"],
+] as const;
+
+export const propertyTypes = [
+  ["residential", "Residential"],
+  ["commercial", "Commercial"],
+  ["builder-developer", "Builder / Developer"],
+  ["property-manager", "Property Manager"],
+  ["other", "Other"],
+] as const;
+
+export const urgencyOptions = [
+  ["planning-quote-only", "Planning / Quote Only"],
+  ["this-week", "This Week"],
+  ["within-24-hours", "Within 24 Hours"],
+  ["emergency-now", "Emergency Now"],
 ] as const;
 
 export const ctaServices = [

@@ -35,13 +35,6 @@ export async function POST(request: NextRequest, context: RouteContext) {
     resetAt: Date.now() + 1000 * 60 * 15,
   });
 
-  if (process.env.TURNSTILE_SECRET_KEY) {
-    const verified = await verifyTurnstile(data.turnstileToken, ip);
-    if (!verified) {
-      return NextResponse.json({ error: "Anti-spam verification failed." }, { status: 400 });
-    }
-  }
-
   const db = getDb();
   const [session] = await db.select().from(consultationSessions).where(eq(consultationSessions.id, id)).limit(1);
   if (!session || session.status !== "active") {
@@ -115,18 +108,4 @@ export async function POST(request: NextRequest, context: RouteContext) {
   await sendInquiryEmail(inserted);
 
   return NextResponse.json({ ok: true, inquiryId: inserted.id });
-}
-
-async function verifyTurnstile(token: string | undefined, ip: string) {
-  if (!token) return false;
-  const form = new FormData();
-  form.append("secret", process.env.TURNSTILE_SECRET_KEY || "");
-  form.append("response", token);
-  form.append("remoteip", ip);
-  const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-    method: "POST",
-    body: form,
-  });
-  const body = (await response.json()) as { success?: boolean };
-  return Boolean(body.success);
 }
