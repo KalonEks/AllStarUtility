@@ -75,3 +75,17 @@ export function sanitizeRecord(data: Record<string, unknown>) {
   }
   return next;
 }
+
+export function addressMatchKey(parts: {
+  serviceAddress: string;
+  city: string;
+  state: string;
+  zip: string;
+}) {
+  const street = sanitizePlainText(parts.serviceAddress).toLowerCase();
+  const city = sanitizePlainText(parts.city).toLowerCase();
+  const state = sanitizePlainText(parts.state).toUpperCase();
+  const zip = sanitizeZip(parts.zip);
+  if (!street || !city || !state || !zip) return "";
+  return `${street}|${city}|${state}|${zip}`;
+}

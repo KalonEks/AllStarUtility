@@ -64,6 +64,7 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
   });
   const [status, setStatus] = useState<"idle" | "saving" | "submitting" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
+  const [duplicateAddress, setDuplicateAddress] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const trackingRef = useRef<Record<string, string>>({});
 
@@ -101,6 +102,9 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
   }, [demoMode]);
 
   function updateField(name: keyof ConsultationFormState, value: string | boolean) {
+    if (name === "serviceAddress" || name === "city" || name === "state" || name === "zip") {
+      setDuplicateAddress(false);
+    }
     setFormData((current) => ({ ...current, [name]: value }));
     setFieldErrors((current) => {
       const next = { ...current };
@@ -168,11 +172,23 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
     return true;
   }
 
+  function applyRequestError(body: { error?: string; code?: string } | null, fallback: string) {
+    setStatus("error");
+    if (body?.code === "duplicate_address") {
+      setDuplicateAddress(true);
+      setMessage("");
+      return;
+    }
+    setDuplicateAddress(false);
+    setMessage(body?.error || fallback);
+  }
+
   async function saveStep(eventType: "step_completed" | "step_back" = "step_completed") {
     if (eventType === "step_completed" && !validateCurrentStep()) return false;
 
     setStatus("saving");
     setMessage("");
+    if (eventType === "step_completed") setDuplicateAddress(false);
 
     if (demoMode) {
       if (step === 1 && eventType === "step_completed" && !sessionId) {
@@ -199,8 +215,7 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
         });
         const body = await response.json().catch(() => null);
         if (!response.ok) {
-          setStatus("error");
-          setMessage(body?.error || "We could not save your progress. Please try again.");
+          applyRequestError(body, "We could not save your progress. Please try again.");
           return false;
         }
         setSessionId(body.sessionId);
@@ -227,8 +242,7 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
       });
       const body = await response.json().catch(() => null);
       if (!response.ok) {
-        setStatus("error");
-        setMessage(body?.error || "We could not save your progress. Please try again.");
+        applyRequestError(body, "We could not save your progress. Please try again.");
         return false;
       }
 
@@ -266,6 +280,7 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
 
     setStatus("submitting");
     setMessage("");
+    setDuplicateAddress(false);
 
     if (demoMode) {
       setStatus("success");
@@ -289,8 +304,7 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
     }
 
     const body = await response.json().catch(() => null);
-    setStatus("error");
-    setMessage(body?.error || "The form could not be submitted. Please call All-Star Utilities if the issue is urgent.");
+    applyRequestError(body, "The form could not be submitted. Please call All-Star Utilities if the issue is urgent.");
   }
 
   function startAnotherRequest() {
@@ -299,6 +313,7 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
     setFormData({ ...defaultFormData, serviceNeeded: presetService(defaultService) });
     setFieldErrors({});
     setMessage("");
+    setDuplicateAddress(false);
     setSessionId(null);
     window.sessionStorage.removeItem(SESSION_STORAGE_KEY);
   }
@@ -490,6 +505,13 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
             </button>
           )}
         </div>
+
+        {duplicateAddress ? (
+          <p className="form-alert" role="alert">
+            An inquiry has already been submitted for this address. If this isn&apos;t correct, please call{" "}
+            <a href={`tel:${business.phoneHref}`}>{business.phone}</a>.
+          </p>
+        ) : null}
 
         {status === "error" && message ? (
           <p className="font-bold text-[#f87171]" role="status">

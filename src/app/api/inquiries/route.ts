@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { inquiries, inquiryEvents } from "@/db/schema";
 import { getDb } from "@/lib/db";
+import { duplicateAddressResponse, hasSubmittedInquiryForAddress } from "@/lib/duplicate-address";
 import { sendInquiryEmail } from "@/lib/email";
 import { hashIp } from "@/lib/security";
 import { inquirySchema } from "@/lib/validation";
@@ -17,6 +18,10 @@ export async function POST(request: NextRequest) {
   const data = parsed.data;
   if (data.companyWebsite) {
     return NextResponse.json({ ok: true });
+  }
+
+  if (await hasSubmittedInquiryForAddress(data)) {
+    return duplicateAddressResponse();
   }
 
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";

@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { consultationSessionEvents, consultationSessions } from "@/db/schema";
 import { mergeSessionPayload } from "@/lib/consultation-session";
 import { getDb } from "@/lib/db";
+import { duplicateAddressResponse, hasSubmittedInquiryForAddress } from "@/lib/duplicate-address";
 import { sanitizeRecord } from "@/lib/sanitize";
 import {
   personalInfoStepSchema,
@@ -60,6 +61,18 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       : { success: true as const, data: incoming };
   if (!stepValidation.success) {
     return NextResponse.json({ error: "Please check the required fields and try again." }, { status: 400 });
+  }
+
+  if (parsed.data.eventType === "step_completed" && parsed.data.step === 2) {
+    const property = stepValidation.data as {
+      serviceAddress: string;
+      city: string;
+      state: string;
+      zip: string;
+    };
+    if (await hasSubmittedInquiryForAddress(property)) {
+      return duplicateAddressResponse();
+    }
   }
 
   const payload = mergeSessionPayload(

@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { consultationSessionEvents, consultationSessions, inquiries, inquiryEvents } from "@/db/schema";
 import { buildInquiryMessage, mergeSessionPayload } from "@/lib/consultation-session";
 import { getDb } from "@/lib/db";
+import { duplicateAddressResponse, hasSubmittedInquiryForAddress } from "@/lib/duplicate-address";
 import { sendInquiryEmail } from "@/lib/email";
 import { hashIp } from "@/lib/security";
 import { consultationFormSchema } from "@/lib/validation";
@@ -48,6 +49,10 @@ export async function POST(request: NextRequest, context: RouteContext) {
   }
 
   const form = validated.data;
+  if (await hasSubmittedInquiryForAddress(form)) {
+    return duplicateAddressResponse();
+  }
+
   const [inserted] = await db
     .insert(inquiries)
     .values({
