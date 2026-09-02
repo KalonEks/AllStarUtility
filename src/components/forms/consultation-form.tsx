@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Send } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Phone, Send } from "lucide-react";
 import { serviceNeededOptions } from "@/lib/content";
+import { business } from "@/lib/site";
 import type { ConsultationFormData } from "@/lib/validation";
 import {
   personalInfoStepSchema,
@@ -63,6 +64,11 @@ const defaultFormData: ConsultationFormData = {
 
 const SESSION_STORAGE_KEY = "asu_consultation_session_id";
 const DEMO_SESSION_ID = "demo-session";
+const RECEIPT_HEADING_ID = "consultation-receipt-heading";
+
+function optionLabel(options: ReadonlyArray<readonly string[]>, value: string) {
+  return options.find((option) => option[0] === value)?.[1] ?? value;
+}
 
 export function ConsultationForm({ defaultService }: { defaultService?: string }) {
   const demoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
@@ -306,11 +312,8 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
 
     if (demoMode) {
       setStatus("success");
-      setMessage("Demo preview: your request was not submitted. This preview is for design and wording review only.");
       window.sessionStorage.removeItem(SESSION_STORAGE_KEY);
       setSessionId(null);
-      setStep(1);
-      setFormData({ ...defaultFormData, serviceNeeded: defaultService || "" });
       return;
     }
 
@@ -322,11 +325,8 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
 
     if (response.ok) {
       setStatus("success");
-      setMessage("Your request was received. For emergencies, call 651-248-1697.");
       window.sessionStorage.removeItem(SESSION_STORAGE_KEY);
       setSessionId(null);
-      setStep(1);
-      setFormData({ ...defaultFormData, serviceNeeded: defaultService || "" });
       setTurnstileTokenReset();
       window.dispatchEvent(new CustomEvent("asu:consultation-submitted"));
       return;
@@ -343,8 +343,23 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
     window.turnstile?.reset(widgetIdRef.current || undefined);
   }
 
+  function startAnotherRequest() {
+    setStatus("idle");
+    setStep(1);
+    setFormData({ ...defaultFormData, serviceNeeded: defaultService || "" });
+    setFieldErrors({});
+    setMessage("");
+    setSessionId(null);
+    widgetIdRef.current = null;
+    window.sessionStorage.removeItem(SESSION_STORAGE_KEY);
+  }
+
   return (
     <div className="glass-panel grid gap-5 p-5 md:p-6">
+      {status === "success" ? (
+        <ConsultationReceipt data={formData} demoMode={demoMode} onStartAnother={startAnotherRequest} />
+      ) : (
+        <div className="grid gap-5">
       <div className="grid gap-3">
         <div className="flex items-center justify-between gap-3">
           {STEPS.map((label, index) => {
@@ -528,16 +543,125 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
           )}
         </div>
 
-        {message ? (
-          <p className={status === "success" ? "font-bold text-[#3b8ff0]" : "font-bold text-[#f87171]"} role="status">
+        {status === "error" && message ? (
+          <p className="font-bold text-[#f87171]" role="status">
             {message}
           </p>
         ) : null}
 
         <p className="text-center text-xs leading-5 text-white/55">
-          This form is for consultation requests. If you have an active sewer or water emergency, call 651-248-1697.
+          This form is for consultation requests. If you have an active sewer or water emergency, call {business.emergencyPhone}.
         </p>
       </form>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ConsultationReceipt({
+  data,
+  demoMode,
+  onStartAnother,
+}: {
+  data: ConsultationFormData;
+  demoMode: boolean;
+  onStartAnother: () => void;
+}) {
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const additionalDetails = (data.additionalDetails ?? "").trim();
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      headingRef.current?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  return (
+    <div className="consultation-receipt" role="region" aria-labelledby={RECEIPT_HEADING_ID}>
+      <div className="consultation-receipt__header">
+        <div className="consultation-receipt__stamp">
+          <Check size={18} aria-hidden />
+        </div>
+        <div>
+          <p className="eyebrow">Request received</p>
+          <h2 id={RECEIPT_HEADING_ID} ref={headingRef} tabIndex={-1}>
+            Thank you for your inquiry.
+          </h2>
+          <p className="consultation-receipt__lede" role="status">
+            Your consultation request was received. Someone from All-Star Utilities will reach out as soon as they are
+            available.
+          </p>
+          {demoMode ? <p className="consultation-receipt__lede">This is a preview. Your request was not sent.</p> : null}
+          <p className="consultation-receipt__emergency">
+            If this is an active sewer or water emergency, call{" "}
+            <a href={`tel:${business.emergencyPhoneHref}`}>{business.emergencyPhone}</a>.
+          </p>
+        </div>
+      </div>
+
+      <div className="consultation-receipt__body">
+        <section className="consultation-receipt__group">
+          <h3 className="consultation-receipt__group-title">Contact</h3>
+          <dl>
+            <ReceiptRow label="First Name" value={data.firstName} />
+            <ReceiptRow label="Last Name" value={data.lastName} />
+            <ReceiptRow label="Email" value={data.email} />
+            <ReceiptRow label="Phone" value={data.phone} />
+          </dl>
+        </section>
+
+        <section className="consultation-receipt__group">
+          <h3 className="consultation-receipt__group-title">Property</h3>
+          <dl>
+            <ReceiptRow label="Property Type" value={optionLabel(propertyTypes, data.propertyType)} />
+            <ReceiptRow label="Service Address" value={data.serviceAddress} />
+            <ReceiptRow label="City" value={data.city} />
+            <ReceiptRow label="State" value={data.state} />
+            <ReceiptRow label="ZIP" value={data.zip} />
+          </dl>
+        </section>
+
+        <section className="consultation-receipt__group">
+          <h3 className="consultation-receipt__group-title">Service</h3>
+          <dl>
+            <ReceiptRow label="Service Needed" value={optionLabel(serviceNeededOptions, data.serviceNeeded)} />
+            <ReceiptRow label="Urgency" value={optionLabel(urgencyOptions, data.urgency)} />
+            <ReceiptRow label="Current Issue / Description" value={data.message} />
+          </dl>
+        </section>
+
+        {additionalDetails ? (
+          <section className="consultation-receipt__group">
+            <h3 className="consultation-receipt__group-title">Additional Details</h3>
+            <dl>
+              <div className="consultation-receipt__row">
+                <dd>{additionalDetails}</dd>
+              </div>
+            </dl>
+          </section>
+        ) : null}
+      </div>
+
+      <div className="consultation-receipt__actions">
+        <a className="button-primary" href={`tel:${business.phoneHref}`}>
+          <Phone size={18} aria-hidden />
+          Call {business.phone}
+        </a>
+        <button className="button-secondary" type="button" onClick={onStartAnother}>
+          Submit Another Request
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function ReceiptRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="consultation-receipt__row">
+      <dt>{label}</dt>
+      <dd>{value}</dd>
     </div>
   );
 }

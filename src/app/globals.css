@@ -15,6 +15,8 @@
   --panel: #ffffff;
   --line: rgb(255 255 255 / 0.1);
   --line-strong: rgb(255 255 255 / 0.16);
+  --success: #5dcc8a;
+  --success-soft: rgb(93 204 138 / 0.14);
 }
 
 @theme inline {
@@ -413,6 +415,167 @@ select.field optgroup {
 
 .text-muted {
   color: var(--muted);
+}
+
+.consultation-receipt {
+  display: grid;
+  animation: consultation-receipt-swap 180ms ease;
+}
+
+@keyframes consultation-receipt-swap {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.consultation-receipt__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+
+.consultation-receipt__header .eyebrow {
+  margin: 0;
+}
+
+.consultation-receipt__stamp {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  place-items: center;
+  border: 1px solid rgb(93 204 138 / 0.4);
+  border-radius: 0.65rem;
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.consultation-receipt__header h2 {
+  margin: 0.2rem 0 0;
+  color: white;
+  font-size: 1.375rem;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.consultation-receipt__lede {
+  margin: 0.55rem 0 0;
+  color: rgb(226 232 240 / 0.88);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.consultation-receipt__emergency {
+  margin: 0.65rem 0 0;
+  color: rgb(255 255 255 / 0.55);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.consultation-receipt__emergency a {
+  display: inline;
+  color: var(--brand-soft);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.consultation-receipt__emergency a:hover {
+  color: #fff;
+}
+
+.consultation-receipt__body {
+  display: grid;
+}
+
+.consultation-receipt__group {
+  display: grid;
+  gap: 0.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.consultation-receipt__group-title {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.consultation-receipt__group dl {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.consultation-receipt__row {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.consultation-receipt__row dt {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.consultation-receipt__row dd {
+  margin: 0;
+  color: var(--foreground);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.consultation-receipt__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.consultation-receipt__actions .button-primary,
+.consultation-receipt__actions .button-secondary {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .consultation-receipt__header h2 {
+    font-size: 1.625rem;
+  }
+
+  .consultation-receipt__row {
+    grid-template-columns: 8.5rem minmax(0, 1fr);
+    gap: 0.35rem 1rem;
+    align-items: baseline;
+  }
+
+  .consultation-receipt__actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .consultation-receipt__actions .button-primary,
+  .consultation-receipt__actions .button-secondary {
+    width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .consultation-receipt {
+    animation: none;
+  }
 }
 
 .trust-chip {

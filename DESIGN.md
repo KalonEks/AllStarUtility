@@ -26,7 +26,7 @@ Existing CSS variables in `src/app/globals.css` `:root`. Use these tokens.
 - text: `--foreground` `#eef2f7`
 - muted text: `--muted` `#94a3b8`
 - borders: `--line`, `--line-strong`
-- success: not tokenized yet — add a token if a status color is needed; do not improvise per component
+- success: `--success` `#5dcc8a` (check icon only); `--success-soft` `rgb(93 204 138 / 0.14)` (stamp well). Do not use accent blue (`#3b8ff0`) as success.
 - warning: not tokenized yet
 - error: not tokenized yet — form errors should use brand red with clear text, not a third red
 
