@@ -10,6 +10,12 @@ export function getDb() {
     throw new Error("DATABASE_URL is not configured.");
   }
 
-  client ??= postgres(url, { max: 3, prepare: false });
+  client ??= postgres(url, {
+    max: 1,
+    prepare: false,
+    connect_timeout: 15,
+    idle_timeout: 20,
+    ssl: "require",
+  });
   return drizzle(client, { schema });
 }
