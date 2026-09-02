@@ -5,15 +5,17 @@ export function SectionHeading({
   title,
   children,
   align = "left",
+  eyebrowClassName,
 }: {
   eyebrow?: string;
   title: string;
   children?: React.ReactNode;
   align?: "left" | "center";
+  eyebrowClassName?: string;
 }) {
   return (
     <FadeIn className={align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-3xl"}>
-      {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
+      {eyebrow ? <p className={["eyebrow", eyebrowClassName].filter(Boolean).join(" ")}>{eyebrow}</p> : null}
       <h2 className={`heading-section mt-3 ${align === "center" ? "mx-auto" : ""}`}>{title}</h2>
       {children ? <div className="text-lead mt-4">{children}</div> : null}
     </FadeIn>

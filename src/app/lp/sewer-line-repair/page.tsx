@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <LandingPage
-      title="Sewer line repair in the Twin Cities"
+      title="Sewer Line Repair in the Twin Cities"
       copy="Recurring backups, sewer smells, root intrusion, cracked pipe, and city notices deserve a practical evaluation before the repair path is chosen."
       defaultService="sewer-line-repair"
     />

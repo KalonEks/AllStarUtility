@@ -11,12 +11,6 @@ export const faqs = [
     answer: "Call the emergency number, 651-248-1697, if sewer or water service is actively failing.",
   },
   {
-    category: "Residential Sewer & Water",
-    question: "Is St. Paul tax assessment financing available?",
-    answer:
-      "This needs to be confirmed before launch. If the St. Paul tax assessment payment plan is still available, we can add clear language here.",
-  },
-  {
     category: "Commercial Sewer & Water",
     question: "Can work be planned to reduce business disruption?",
     answer: "Yes. Access, urgency, safety, and service continuity are part of the planning conversation from the start.",
@@ -32,19 +26,19 @@ export const faqs = [
     answer: "It may be. We need to understand the pipe condition and site constraints before recommending CIPP lining.",
   },
   {
-    category: "Sewer Pipe Lining",
+    category: "Pipe Lining Option",
     question: "What is CIPP sewer pipe lining?",
     answer:
       "CIPP stands for cured-in-place pipe. A resin liner is installed inside a qualifying existing pipe and cured so the old pipe has a new interior surface.",
   },
   {
-    category: "Sewer Pipe Lining",
+    category: "Pipe Lining Option",
     question: "When is excavation still necessary?",
     answer:
       "Excavation may be required if the pipe is collapsed, badly offset, inaccessible, bellied, or simply not a safe candidate for lining.",
   },
   {
-    category: "Sewer Pipe Lining",
+    category: "Pipe Lining Option",
     question: "Does lining replace an inspection?",
     answer: "No. We need to understand the existing pipe condition and site constraints before recommending lining.",
   },

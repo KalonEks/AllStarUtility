@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <LandingPage
-      title="Water line replacement and repair"
+      title="Water Line Replacement and Repair"
       copy="All-Star Utilities evaluates residential and commercial water line problems, replacement needs, excavation access, and urgent service concerns."
       defaultService="water-line-replacement"
     />

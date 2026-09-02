@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { FadeIn } from "@/components/motion";
 
 export function InfoHero({
@@ -10,7 +11,7 @@ export function InfoHero({
 }: {
   eyebrow: string;
   title: string;
-  description: string;
+  description: ReactNode;
   align?: "left" | "center";
   showDivider?: boolean;
   className?: string;

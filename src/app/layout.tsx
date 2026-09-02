@@ -36,6 +36,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+      <head>
+        {process.env.NODE_ENV === "development" ? (
+          <Script
+            src="//unpkg.com/react-grab/dist/index.global.js"
+            crossOrigin="anonymous"
+            strategy="beforeInteractive"
+          />
+        ) : null}
+      </head>
       <body className="flex min-h-full flex-col">
         {ga4Id ? (
           <>

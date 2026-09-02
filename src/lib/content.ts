@@ -20,7 +20,7 @@ export const services = [
     href: "/sewer-pipe-lining",
     icon: ShieldCheck,
     summary:
-      "For the right pipe, CIPP lining can restore the line from the inside and reduce the need for open excavation.",
+      "On residential or commercial work, CIPP lining can restore a qualifying sewer from the inside instead of a full open cut-and-replace.",
   },
   {
     title: "Excavation & Deep Tunnel Work",
@@ -44,6 +44,45 @@ export const services = [
       "If you have an active backup, leak, service interruption, or urgent sewer or water issue, call our emergency line.",
   },
 ];
+
+export const homeFeatured = [
+  {
+    title: "Residential Sewer & Water",
+    href: "/residential-sewer-water",
+    summary:
+      "Repair, replace, install, and evaluate sewer laterals, water lines, storm work, and related utilities at the house.",
+    image: {
+      src: "/images/home-work-residential-under.png",
+      alt: "Residential sewer hole with a sheet-steel trench box set in with a pull-gap; white PVC in a sub-ditch under the box, not through the walls",
+    },
+    ctaLabel: "View Residential Services",
+  },
+  {
+    title: "Commercial Sewer & Water",
+    href: "/commercial-sewer-water",
+    summary:
+      "Property owners, managers, developers, contractors, and facilities teams — sewer and water work planned around access and disruption.",
+    image: {
+      src: "/images/home-work-commercial-person-moved.png",
+      alt: "Commercial parking-lot sewer pit with a sheet-steel trench box; worker standing on the asphalt at the rim; white PVC in dirt under the box beside an office building",
+    },
+    ctaLabel: "View Commercial Services",
+  },
+];
+
+export const homeLining = {
+  eyebrow: "When the pipe qualifies",
+  title: "Lining instead of digging up the whole line.",
+  summary:
+    "CIPP lining restores a qualifying sewer from the inside. It is an option on residential or commercial work — not a third kind of job. In general it means less digging than a standard cut-and-replace, and it is often less expensive than replacing the entire line. We have to see the pipe before recommending it.",
+  href: "/sewer-pipe-lining",
+  ctaLabel: "How Lining Works",
+  image: {
+    src: "/images/cipp-before-after.png",
+    alt: "Before and after sewer pipe lining comparison",
+  },
+  caption: "Damaged pipe interior and a lined pipe interior.",
+};
 
 export const trustPoints = [
   "Family-owned and operated",

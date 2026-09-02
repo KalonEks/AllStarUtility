@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { CtaBand } from "@/components/cta-band";
 import { InfoHero } from "@/components/info-hero";
 import { SectionHeading } from "@/components/section-heading";
 import { business } from "@/lib/site";
@@ -38,6 +41,25 @@ export default function AboutPage() {
           </SectionHeading>
         </div>
       </section>
+      <section className="section-flow">
+        <div className="container-page">
+          <SectionHeading align="center" eyebrow="Credentials" title="Licensed, bonded, certified." />
+          <ul className="mx-auto mt-6 max-w-xl space-y-2 text-center text-sm font-bold text-white/82">
+            {business.credentials.map((credential) => (
+              <li key={credential}>{credential}</li>
+            ))}
+          </ul>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            <Link className="button-ghost" href="/residential-sewer-water">
+              View Residential Services <ArrowRight size={18} aria-hidden />
+            </Link>
+            <Link className="button-ghost" href="/commercial-sewer-water">
+              View Commercial Services <ArrowRight size={18} aria-hidden />
+            </Link>
+          </div>
+        </div>
+      </section>
+      <CtaBand />
     </>
   );
 }

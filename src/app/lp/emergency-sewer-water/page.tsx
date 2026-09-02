@@ -9,7 +9,9 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <LandingPage
-      title="Emergency sewer and water help"
+      eyebrow="24/7 Emergency"
+      urgent
+      title="Emergency Sewer and Water Help"
       copy="For active backups, leaks, service interruptions, pooling water, or urgent sewer and water problems, call the emergency line first."
       defaultService="emergency-sewer-water"
     />

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { business, navItems } from "@/lib/site";
@@ -15,9 +16,29 @@ export function Header() {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
   const links = isAdmin ? adminNavItems : navItems;
+  const [isScrolled, setIsScrolled] = useState(false);
+  const mobileMenuRef = useRef<HTMLDetailsElement>(null);
+
+  const closeMobileMenu = () => {
+    mobileMenuRef.current?.removeAttribute("open");
+  };
+
+  useEffect(() => {
+    closeMobileMenu();
+  }, [pathname]);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setIsScrolled(window.scrollY > 12);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="relative z-50 bg-transparent">
+    <header className={isScrolled ? "site-header is-scrolled" : "site-header"}>
       <div className="h-0.5 bg-[linear-gradient(90deg,#d71920_0%,#d71920_34%,rgb(255_255_255/0.25)_34%,rgb(255_255_255/0.25)_66%,#0b63ce_66%,#0b63ce_100%)]" />
       <div className="container-page flex min-h-[4.75rem] items-center justify-between gap-3 py-2 md:min-h-[5.5rem]">
         <div className="flex min-w-0 items-center gap-2.5 leading-tight sm:gap-3">
@@ -54,7 +75,13 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={pathname === item.href ? "text-[#3b8ff0]" : "transition-colors hover:text-white"}
+                className={
+                  pathname === item.href
+                    ? "text-[#3b8ff0] no-underline"
+                    : isAdmin
+                      ? "no-underline transition-colors hover:text-white"
+                      : "no-underline transition-[color,font-weight] hover:font-black hover:text-[var(--brand)]"
+                }
               >
                 {item.label}
               </Link>
@@ -66,16 +93,16 @@ export function Header() {
             </Link>
           ) : null}
         </div>
-        <details className="group lg:hidden">
+        <details ref={mobileMenuRef} className="group lg:hidden">
           <summary className="inline-flex size-10 cursor-pointer list-none items-center justify-center rounded-md border border-white/20 bg-black/25 text-white backdrop-blur-sm transition [&::-webkit-details-marker]:hidden">
             <span className="sr-only">Toggle navigation menu</span>
             <Menu size={20} className="group-open:hidden" aria-hidden />
             <X size={20} className="hidden group-open:block" aria-hidden />
           </summary>
-          <div className="fixed left-0 right-0 top-[calc(4.75rem+2px)] border-t border-white/10 bg-[#0a1220]/95 shadow-xl backdrop-blur-xl md:top-[calc(5.5rem+2px)]">
+          <div className="absolute left-0 right-0 top-full border-t border-white/10 bg-[#0a1220]/95 shadow-xl backdrop-blur-xl">
             <nav className="container-page grid gap-1 py-3 text-sm font-bold text-white" aria-label="Mobile navigation">
               {!isAdmin ? (
-                <a href={`tel:${business.phoneHref}`} className="rounded-md px-3 py-2 text-[#3b8ff0]">
+                <a href={`tel:${business.phoneHref}`} className="rounded-md px-3 py-2 text-[#3b8ff0]" onClick={closeMobileMenu}>
                   Call {business.phone}
                 </a>
               ) : null}
@@ -86,12 +113,13 @@ export function Header() {
                   className={`rounded-md px-3 py-2.5 transition ${
                     pathname === item.href ? "bg-white/10 text-[#3b8ff0]" : "hover:bg-white/5"
                   }`}
+                  onClick={closeMobileMenu}
                 >
                   {item.label}
                 </Link>
               ))}
               {!isAdmin ? (
-                <Link className="button-primary mt-2 justify-center" href="/contact">
+                <Link className="button-primary mt-2 justify-center" href="/contact" onClick={closeMobileMenu}>
                   Free Consultation
                 </Link>
               ) : null}

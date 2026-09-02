@@ -4,10 +4,22 @@ import { InfoHero } from "@/components/info-hero";
 import { FadeIn } from "@/components/motion";
 import { business } from "@/lib/site";
 
-export function LandingPage({ title, copy, defaultService }: { title: string; copy: string; defaultService: string }) {
+export function LandingPage({
+  title,
+  copy,
+  defaultService,
+  eyebrow = "Free site evaluation",
+  urgent = false,
+}: {
+  title: string;
+  copy: string;
+  defaultService: string;
+  eyebrow?: string;
+  urgent?: boolean;
+}) {
   return (
     <>
-      <InfoHero eyebrow="Free site evaluation" title={title} description={copy} />
+      <InfoHero align="center" eyebrow={eyebrow} title={title} description={copy} />
       <section className="section-flow">
         <div className="container-page grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <FadeIn className="grid content-start gap-6">
@@ -17,9 +29,26 @@ export function LandingPage({ title, copy, defaultService }: { title: string; co
                 Family-owned and operated, owner/operator on the job, and a 10-year workmanship guarantee.
               </p>
               <div className="mt-5 grid gap-3">
-                <a className="button-primary" href={`tel:${business.phoneHref}`}>Call {business.phone}</a>
-                <a className="button-secondary" href={`tel:${business.emergencyPhoneHref}`}>Emergency {business.emergencyPhone}</a>
-                <Link className="text-sm font-bold text-[#3b8ff0] hover:text-white" href="/privacy-policy">Privacy policy</Link>
+                {urgent ? (
+                  <>
+                    <a className="button-primary" href={`tel:${business.emergencyPhoneHref}`}>
+                      24/7 Emergency: {business.emergencyPhone}
+                    </a>
+                    <a className="button-secondary" href={`tel:${business.phoneHref}`}>
+                      Call {business.phone}
+                    </a>
+                  </>
+                ) : (
+                  <>
+                    <a className="button-primary" href={`tel:${business.phoneHref}`}>
+                      Call {business.phone}
+                    </a>
+                    <a className="home-hero__emergency justify-self-start" href={`tel:${business.emergencyPhoneHref}`}>
+                      24/7 Emergency: {business.emergencyPhone}
+                    </a>
+                  </>
+                )}
+                <Link className="button-ghost justify-self-start" href="/privacy-policy">Privacy policy</Link>
               </div>
             </div>
           </FadeIn>

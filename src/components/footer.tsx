@@ -14,7 +14,7 @@ export function Footer() {
             <p className="text-xl font-black text-white">{business.name}</p>
           </div>
           <p className="mt-2 max-w-md text-sm leading-6 text-white/72">
-            Twin Cities sewer, water, excavation, and sewer pipe lining specialists. Family-owned and operated since {business.founded}.
+            Twin Cities sewer and water specialists for residential and commercial work. Family-owned and operated since {business.founded}.
           </p>
           <p className="mt-4 text-sm text-white/72">{business.primaryAddress}</p>
           <p className="text-sm text-white/72">{business.secondaryAddress}</p>
@@ -23,8 +23,8 @@ export function Footer() {
           <p className="font-black text-white">Contact</p>
           <div className="mt-3 grid gap-2 text-sm text-white/82">
             <a className="transition hover:text-[#3b8ff0]" href={`tel:${business.phoneHref}`}>{business.phone}</a>
-            <a className="font-bold text-[#d71920] transition hover:text-white" href={`tel:${business.emergencyPhoneHref}`}>
-              24/7 emergency: {business.emergencyPhone}
+            <a className="font-bold text-[var(--brand)] transition hover:text-[var(--brand-soft)]" href={`tel:${business.emergencyPhoneHref}`}>
+              24/7 Emergency: {business.emergencyPhone}
             </a>
             {business.email.includes("PLACEHOLDER") ? (
               <span className="text-white/55">Email pending confirmation</span>
@@ -37,9 +37,9 @@ export function Footer() {
           <p className="font-black text-white">Site Map</p>
           <div className="mt-3 grid grid-cols-2 gap-2 text-sm text-white/78">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href} className="transition hover:text-[#d71920] hover:underline">{item.label}</Link>
+              <Link key={item.href} href={item.href} className="no-underline transition-[color,font-weight] hover:font-bold hover:text-[var(--brand)]">{item.label}</Link>
             ))}
-            <Link href="/contact" className="transition hover:text-[#d71920] hover:underline">Contact</Link>
+            <Link href="/contact" className="no-underline transition-[color,font-weight] hover:font-bold hover:text-[var(--brand)]">Contact</Link>
           </div>
         </div>
       </div>

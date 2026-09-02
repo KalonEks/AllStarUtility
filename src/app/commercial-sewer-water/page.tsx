@@ -35,10 +35,10 @@ const content = {
   },
   pipeLiningCallout: {
     eyebrow: "Lower-disruption repair option",
-    title: "Sewer pipe lining can be a fit for some commercial lines",
+    title: "Sewer pipe lining may be an option on commercial sewer work",
     body: "When the pipe condition allows it, CIPP lining can reduce excavation and help keep commercial properties moving.",
     href: "/sewer-pipe-lining",
-    linkText: "Learn about sewer pipe lining / CIPP",
+    linkText: "How Lining Works",
     image: {
       src: "/images/sewer-liner-install.png",
       alt: "CIPP sewer pipe lining installation diagram showing a liner hose entering an underground sewer pipe",

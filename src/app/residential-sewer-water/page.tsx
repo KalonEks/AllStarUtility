@@ -7,6 +7,7 @@ const content = {
   intro:
     "We help homeowners figure out what is happening underground before a sewer or water problem turns into a bigger repair.",
   defaultService: "sewer-line-repair",
+  ctaTitle: "Request a free evaluation",
   bullets: [
     "Sewer line repair and replacement",
     "Water line repair and replacement",
@@ -20,7 +21,7 @@ const content = {
     "Manhole repair and replacement where applicable",
     "Water main and fire hydrant utility work where applicable",
     "Excavation for sand rock, deep sewer, and deep tunnel conditions",
-    "Free site evaluation for planning the right repair",
+    "Free evaluation for planning the right repair",
   ],
   signs: [
     "Slow drains or recurring clogs",
@@ -42,10 +43,10 @@ const content = {
   },
   pipeLiningCallout: {
     eyebrow: "Pipe lining option",
-    title: "Sewer pipe lining may be available for residential sewer lines",
+    title: "Sewer pipe lining may be an option on residential sewer work",
     body: "If the existing sewer line is still a good candidate, CIPP lining can restore the inside of the pipe with less digging than full open replacement.",
     href: "/sewer-pipe-lining",
-    linkText: "Learn about sewer pipe lining / CIPP",
+    linkText: "How Lining Works",
     image: {
       src: "/images/sewer-liner-install.png",
       alt: "CIPP sewer pipe lining installation diagram showing a liner hose entering an underground sewer pipe",
