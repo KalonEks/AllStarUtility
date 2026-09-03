@@ -78,10 +78,14 @@ function howHeardField() {
     .string()
     .optional()
     .transform((value) => sanitizePlainText(value ?? "", { max: 120 }))
-    .refine((value) => value === "" || (referralValues as readonly string[]).includes(value), {
-      message: "Select a referral source.",
-    })
-    .transform((value) => (value === "" ? noReferralSelected : value));
+    .refine(
+      (value) =>
+        value === "" ||
+        value === noReferralSelected ||
+        (referralValues as readonly string[]).includes(value),
+      { message: "Select a referral source." },
+    )
+    .transform((value) => (value === "" || value === noReferralSelected ? noReferralSelected : value));
 }
 
 function plainText(max: number, options?: { min?: number; message?: string; multiline?: boolean }) {

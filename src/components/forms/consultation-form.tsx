@@ -512,7 +512,9 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
             <label className="label">
               Referral
               <select className="field" name="howHeard" value={formData.howHeard} onChange={(event) => updateField("howHeard", event.target.value)}>
-                <option value="">Select a referral source</option>
+                <option value="" hidden>
+                  Select a referral source
+                </option>
                 {referralOptions.map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}
