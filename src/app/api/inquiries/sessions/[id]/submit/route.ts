@@ -70,6 +70,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
       urgency: form.urgency,
       message: buildInquiryMessage(form),
       currentIssue: form.additionalDetails?.trim() || null,
+      howHeard: form.howHeard || null,
       source: session.utmSource || null,
       landingPage: session.landingPage || null,
       referrer: session.referrer || null,

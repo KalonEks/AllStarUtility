@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, Phone, Send } from "lucide-react";
-import { serviceNeededOptions, propertyTypes, urgencyOptions } from "@/lib/content";
+import { propertyTypes, referralOptions, serviceNeededOptions, urgencyOptions } from "@/lib/content";
+import { business, minnesota } from "@/lib/site";
+import { constrainPhoneInput, constrainZipInput } from "@/lib/us-contact";
 import { serviceNeededValues } from "@/lib/validation";
-import { business } from "@/lib/site";
 import type { ConsultationFormState } from "@/lib/validation";
 import {
   personalInfoStepSchema,
@@ -34,6 +35,7 @@ const defaultFormData: ConsultationFormState = {
   urgency: "planning-quote-only",
   message: "",
   additionalDetails: "",
+  howHeard: "",
   consent: false,
   companyWebsite: "",
   turnstileToken: "",
@@ -140,6 +142,7 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
     }
     return {
       additionalDetails: formData.additionalDetails,
+      howHeard: formData.howHeard,
       consent: formData.consent,
       companyWebsite: formData.companyWebsite,
       turnstileToken: formData.turnstileToken,
@@ -387,7 +390,18 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
               </label>
               <label className="label">
                 Phone
-                <input className="field" name="phone" type="tel" autoComplete="tel" value={formData.phone} onChange={(event) => updateField("phone", event.target.value)} required />
+                <input
+                  className="field"
+                  name="phone"
+                  type="tel"
+                  inputMode="numeric"
+                  autoComplete="tel-national"
+                  placeholder="651-555-0123"
+                  maxLength={14}
+                  value={formData.phone}
+                  onChange={(event) => updateField("phone", constrainPhoneInput(event.target.value))}
+                  required
+                />
                 {fieldErrors.phone ? <span className="text-xs font-bold text-[#f87171]">{fieldErrors.phone}</span> : null}
               </label>
             </div>
@@ -419,11 +433,29 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
               </label>
               <label className="label">
                 State
-                <input className="field" name="state" autoComplete="address-level1" value={formData.state} onChange={(event) => updateField("state", event.target.value)} required />
+                <input
+                  className="field"
+                  name="state"
+                  autoComplete="address-level1"
+                  value={minnesota.abbreviation}
+                  readOnly
+                  aria-readonly="true"
+                />
+                {fieldErrors.state ? <span className="text-xs font-bold text-[#f87171]">{fieldErrors.state}</span> : null}
               </label>
               <label className="label">
                 ZIP
-                <input className="field" name="zip" autoComplete="postal-code" pattern="[0-9]{5}(-[0-9]{4})?" value={formData.zip} onChange={(event) => updateField("zip", event.target.value)} required />
+                <input
+                  className="field"
+                  name="zip"
+                  inputMode="numeric"
+                  autoComplete="postal-code"
+                  placeholder="55116"
+                  maxLength={10}
+                  value={formData.zip}
+                  onChange={(event) => updateField("zip", constrainZipInput(event.target.value))}
+                  required
+                />
                 {fieldErrors.zip ? <span className="text-xs font-bold text-[#f87171]">{fieldErrors.zip}</span> : null}
               </label>
             </div>
@@ -464,6 +496,17 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
 
         {step === 4 ? (
           <>
+            <label className="label">
+              Referral
+              <select className="field" name="howHeard" value={formData.howHeard} onChange={(event) => updateField("howHeard", event.target.value)}>
+                <option value="">Select a referral source</option>
+                {referralOptions.map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
             <label className="label">
               Additional Details (If Any)
               <textarea className="field min-h-28" name="additionalDetails" value={formData.additionalDetails} onChange={(event) => updateField("additionalDetails", event.target.value)} />

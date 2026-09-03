@@ -7,9 +7,7 @@ export function mergeSessionPayload(existing: SessionPayload, incoming: SessionP
 }
 
 export function buildInquiryMessage(data: ConsultationFormData) {
-  const additional = data.additionalDetails?.trim();
-  if (!additional) return data.message;
-  return `${data.message}\n\nAdditional details: ${additional}`;
+  return data.message;
 }
 
 export function trackingFromBody(body: Record<string, unknown>) {

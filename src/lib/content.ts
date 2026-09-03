@@ -119,6 +119,17 @@ export const urgencyOptions = [
   ["emergency-now", "Emergency Now"],
 ] as const;
 
+export const referralOptions = [
+  ["ad", "Ad"],
+  ["word-of-mouth", "Word Of Mouth"],
+  ["social-media", "Social Media"],
+  ["google-search", "Google Search"],
+  ["return-customer", "Return Customer"],
+  ["contractor-builder", "Contractor / Builder"],
+  ["truck-yard-sign", "Truck / Yard Sign"],
+  ["other", "Other"],
+] as const;
+
 export const ctaServices = [
   "Sewer line repair",
   "Water line replacement",

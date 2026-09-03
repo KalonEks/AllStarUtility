@@ -24,6 +24,12 @@ export const business = {
   ],
 };
 
+export const minnesota = {
+  abbreviation: "MN",
+  zipMin: 55001,
+  zipMax: 56763,
+};
+
 export const navItems = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },

@@ -5,6 +5,7 @@ import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { SiteBackdrop } from "@/components/site-backdrop";
 import { TrackingEvents } from "@/components/tracking-events";
+import { getSession } from "@/lib/security";
 import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
@@ -31,8 +32,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const ga4Id = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID;
+  const session = await getSession();
 
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
@@ -55,7 +57,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           </>
         ) : null}
         <SiteBackdrop />
-        <Header />
+        <Header isAuthenticated={Boolean(session)} />
         <main className="relative flex-1">{children}</main>
         <Footer />
         <TrackingEvents />

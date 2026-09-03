@@ -273,6 +273,16 @@ a {
   color: rgb(148 163 184 / 0.85);
 }
 
+.field[readonly] {
+  color: var(--muted);
+  cursor: default;
+}
+
+.field[readonly]:focus {
+  border-color: rgb(255 255 255 / 0.14);
+  background: rgb(255 255 255 / 0.06);
+}
+
 select.field {
   color: #fff;
   background-color: rgb(10 18 32 / 0.72);
@@ -847,6 +857,38 @@ select.field optgroup {
 
 .admin-table tbody tr:hover {
   background: rgb(255 255 255 / 0.03);
+}
+
+.admin-filter-dialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  border: none;
+  background: transparent;
+  padding: 1rem;
+}
+
+.admin-filter-dialog[open] {
+  display: grid;
+  place-items: center;
+}
+
+.admin-filter-dialog::backdrop {
+  background: rgb(6 11 20 / 0.72);
+}
+
+.admin-filter-dialog__panel {
+  width: min(26rem, 100%);
+  border: 1px solid var(--line);
+  border-radius: 0.65rem;
+  background: var(--bg-elevated);
+  color: var(--foreground);
+  padding: 1.25rem;
+  box-shadow: 0 24px 48px rgb(0 0 0 / 0.4);
 }
 
 @media (prefers-reduced-motion: reduce) {

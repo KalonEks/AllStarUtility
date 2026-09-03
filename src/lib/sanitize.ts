@@ -38,7 +38,7 @@ export function sanitizePlainText(
 
 export function sanitizePhone(input: string) {
   return sanitizePlainText(input)
-    .replace(/[^\d+().\-\s]/g, "")
+    .replace(/[^\d().\-\s]/g, "")
     .replace(/\s+/g, " ")
     .trim();
 }

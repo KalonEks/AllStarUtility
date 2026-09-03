@@ -1,6 +1,47 @@
 import { z } from "zod";
-import { propertyTypes, serviceNeededOptions, urgencyOptions } from "@/lib/content";
+import { propertyTypes, referralOptions, serviceNeededOptions, urgencyOptions } from "@/lib/content";
 import { sanitizePhone, sanitizePlainText, sanitizeZip } from "@/lib/sanitize";
+import { minnesota } from "@/lib/site";
+import {
+  formatUsNationalPhone,
+  includesPhoneCountryCode,
+  isMinnesotaState,
+  isMinnesotaZip,
+  isUsNationalPhone,
+} from "@/lib/us-contact";
+
+function usPhoneField() {
+  return z
+    .string()
+    .transform((value) => sanitizePhone(value))
+    .refine((value) => !includesPhoneCountryCode(value), {
+      message: "Enter a 10-digit U.S. phone number without a country code.",
+    })
+    .refine((value) => isUsNationalPhone(value), {
+      message: "Enter a valid 10-digit U.S. phone number.",
+    })
+    .transform((value) => formatUsNationalPhone(value));
+}
+
+function minnesotaZipField() {
+  return z
+    .string()
+    .transform((value) => sanitizeZip(value))
+    .pipe(z.string().regex(/^\d{5}(-\d{4})?$/, "Enter a valid ZIP code."))
+    .refine((value) => isMinnesotaZip(value), {
+      message: "Enter a Minnesota ZIP code.",
+    });
+}
+
+function minnesotaStateField() {
+  return z
+    .string()
+    .transform((value) => sanitizePlainText(value, { max: 40 }))
+    .refine((value) => isMinnesotaState(value), {
+      message: "Service is available in Minnesota only.",
+    })
+    .transform(() => minnesota.abbreviation);
+}
 
 function optionValues<T extends readonly (readonly [string, string])[]>(options: T) {
   return options.map(([value]) => value) as [T[number][0], ...T[number][0][]];
@@ -9,6 +50,7 @@ function optionValues<T extends readonly (readonly [string, string])[]>(options:
 export const propertyTypeValues = optionValues(propertyTypes);
 export const serviceNeededValues = optionValues(serviceNeededOptions);
 export const urgencyValues = optionValues(urgencyOptions);
+export const referralValues = optionValues(referralOptions);
 
 function plainText(max: number, options?: { min?: number; message?: string; multiline?: boolean }) {
   return z
@@ -46,21 +88,15 @@ export const personalInfoStepSchema = z.object({
     .string()
     .transform((value) => sanitizePlainText(value, { max: 160 }).toLowerCase())
     .pipe(z.email("Enter a valid email address.").max(160)),
-  phone: z
-    .string()
-    .transform((value) => sanitizePhone(value).slice(0, 30))
-    .pipe(z.string().min(7, "Enter a valid phone number.").max(30)),
+  phone: usPhoneField(),
 });
 
 export const propertyDetailsStepSchema = z.object({
   propertyType: z.enum(propertyTypeValues, { message: "Select a property type." }),
   serviceAddress: plainText(180, { min: 3, message: "Service address is required." }),
   city: plainText(100, { min: 2, message: "City is required." }),
-  state: plainText(40, { min: 2 }),
-  zip: z
-    .string()
-    .transform((value) => sanitizeZip(value))
-    .pipe(z.string().regex(/^\d{5}(-\d{4})?$/, "Enter a valid ZIP code.")),
+  state: minnesotaStateField(),
+  zip: minnesotaZipField(),
 });
 
 export const serviceDetailsStepSchema = z.object({
@@ -71,6 +107,7 @@ export const serviceDetailsStepSchema = z.object({
 
 export const submitStepSchema = z.object({
   additionalDetails: optionalPlainText(4000, { multiline: true }),
+  howHeard: z.enum(referralValues).optional().or(z.literal("")),
   consent: z.boolean().refine((value) => value, "Consent is required."),
   companyWebsite: z
     .string()
@@ -106,17 +143,11 @@ export const inquirySchema = z.object({
     .string()
     .transform((value) => sanitizePlainText(value, { max: 160 }).toLowerCase())
     .pipe(z.email().max(160)),
-  phone: z
-    .string()
-    .transform((value) => sanitizePhone(value).slice(0, 30))
-    .pipe(z.string().min(7).max(30)),
+  phone: usPhoneField(),
   serviceAddress: plainText(180, { min: 3 }),
   city: plainText(100, { min: 2 }),
-  state: plainText(40, { min: 2 }),
-  zip: z
-    .string()
-    .transform((value) => sanitizeZip(value))
-    .pipe(z.string().regex(/^\d{5}(-\d{4})?$/)),
+  state: minnesotaStateField(),
+  zip: minnesotaZipField(),
   propertyType: z.enum(propertyTypeValues),
   serviceNeeded: z.array(z.enum(serviceNeededValues)).min(1),
   urgency: z.enum(urgencyValues),

@@ -12,10 +12,10 @@ const adminNavItems = [
   { href: "/", label: "Public site" },
 ];
 
-export function Header() {
+export function Header({ isAuthenticated = false }: { isAuthenticated?: boolean }) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
-  const links = isAdmin ? adminNavItems : navItems;
+  const links = isAdmin ? adminNavItems.filter((item) => item.href !== "/admin/inquiries" || isAuthenticated) : navItems;
   const [isScrolled, setIsScrolled] = useState(false);
   const mobileMenuRef = useRef<HTMLDetailsElement>(null);
 

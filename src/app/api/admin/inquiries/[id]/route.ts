@@ -6,7 +6,7 @@ import { getSession } from "@/lib/security";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
-  if (!session) redirect("/admin/login");
+  if (!session) redirect("/admin");
   const { id } = await params;
   const form = await request.formData();
   const status = String(form.get("status") || "NEW") as typeof inquiries.$inferSelect.status;
