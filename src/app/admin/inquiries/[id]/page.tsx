@@ -6,7 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { FadeIn } from "@/components/motion";
 import { inquiries, inquiryEvents, inquiryNotes, users } from "@/db/schema";
 import { getDb } from "@/lib/db";
-import { formatHowHeard, formatInquiryMessage, formatInquiryStatus, formatPropertyType, formatServiceNeeded, formatUrgency, toTitleCase } from "@/lib/display-format";
+import { formatHowHeard, formatInquiryMessage, formatInquiryStatus, formatPropertyType, formatServicesNeeded, formatUrgency, toTitleCase } from "@/lib/display-format";
 import { getSession } from "@/lib/security";
 import { formatUsNationalPhone } from "@/lib/us-contact";
 
@@ -54,12 +54,12 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
             <Field label="Email" value={row.email} />
             <Field label="Preferred contact" value={toTitleCase(row.preferredContactMethod)} />
             <Field label="Property type" value={formatPropertyType(row.propertyType)} />
-            <Field label="Service needed" value={row.serviceNeeded.map(formatServiceNeeded).join(", ")} />
+            <Field label="Service needed" value={formatServicesNeeded(row.serviceNeeded)} />
             <Field label="Urgency" value={formatUrgency(row.urgency)} />
             <Field label="Status" value={formatInquiryStatus(row.status)} />
             <Field label="Message" value={formatInquiryMessage(row.message, row.currentIssue)} />
             <Field label="Additional details" value={row.currentIssue || "Not provided"} />
-            <Field label="Referral" value={row.howHeard ? formatHowHeard(row.howHeard) : "Not provided"} />
+            <Field label="Referral" value={formatHowHeard(row.howHeard)} />
           </FadeIn>
           <aside className="grid content-start gap-5">
             <FadeIn delay={0.05}>

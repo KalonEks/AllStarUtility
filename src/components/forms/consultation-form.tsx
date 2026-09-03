@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, Phone, Send } from "lucide-react";
-import { propertyTypes, referralOptions, serviceNeededOptions, urgencyOptions } from "@/lib/content";
+import { ServiceNeededSelect } from "@/components/forms/service-needed-select";
+import { propertyTypes, referralOptions, urgencyOptions } from "@/lib/content";
+import { formatServicesNeeded } from "@/lib/display-format";
 import { business, minnesota } from "@/lib/site";
 import { constrainPhoneInput, constrainZipInput } from "@/lib/us-contact";
 import { serviceNeededValues } from "@/lib/validation";
@@ -31,7 +33,7 @@ const defaultFormData: ConsultationFormState = {
   city: "",
   state: "MN",
   zip: "",
-  serviceNeeded: "",
+  serviceNeeded: [],
   urgency: "planning-quote-only",
   message: "",
   additionalDetails: "",
@@ -45,11 +47,15 @@ const SESSION_STORAGE_KEY = "asu_consultation_session_id";
 const DEMO_SESSION_ID = "demo-session";
 const RECEIPT_HEADING_ID = "consultation-receipt-heading";
 
-function presetService(value?: string): ConsultationFormState["serviceNeeded"] {
-  if (value && (serviceNeededValues as readonly string[]).includes(value)) {
-    return value as ConsultationFormState["serviceNeeded"];
-  }
-  return "";
+function presetService(value?: string): string[] {
+  if (value && (serviceNeededValues as readonly string[]).includes(value)) return [value];
+  return [];
+}
+
+function normalizeStoredServices(value: unknown): string[] | null {
+  if (Array.isArray(value)) return value.map(String);
+  if (typeof value === "string" && value) return [value];
+  return null;
 }
 
 function optionLabel(options: ReadonlyArray<readonly string[]>, value: string) {
@@ -98,7 +104,11 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
         }
         setSessionId(body.sessionId);
         setStep(body.currentStep);
-        setFormData((current) => ({ ...current, ...body.payload }));
+        setFormData((current) => {
+          const payload = body.payload as Record<string, unknown>;
+          const serviceNeeded = normalizeStoredServices(payload.serviceNeeded) ?? current.serviceNeeded;
+          return { ...current, ...payload, serviceNeeded };
+        });
       })
       .catch(() => window.sessionStorage.removeItem(SESSION_STORAGE_KEY));
   }, [demoMode]);
@@ -466,14 +476,17 @@ export function ConsultationForm({ defaultService }: { defaultService?: string }
           <>
             <label className="label">
               Service Needed
-              <select className="field" name="serviceNeeded" value={formData.serviceNeeded} onChange={(event) => updateField("serviceNeeded", event.target.value)} required>
-                <option value="">Select a service</option>
-                {serviceNeededOptions.map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
+              <ServiceNeededSelect
+                values={formData.serviceNeeded}
+                onChange={(next) => {
+                  setFormData((current) => ({ ...current, serviceNeeded: next }));
+                  setFieldErrors((current) => {
+                    const errors = { ...current };
+                    delete errors.serviceNeeded;
+                    return errors;
+                  });
+                }}
+              />
               {fieldErrors.serviceNeeded ? <span className="text-xs font-bold text-[#f87171]">{fieldErrors.serviceNeeded}</span> : null}
             </label>
             <label className="label">
@@ -639,7 +652,7 @@ function ConsultationReceipt({
         <section className="consultation-receipt__group">
           <h3 className="consultation-receipt__group-title">Service</h3>
           <dl>
-            <ReceiptRow label="Service Needed" value={optionLabel(serviceNeededOptions, data.serviceNeeded)} />
+            <ReceiptRow label="Service Needed" value={formatServicesNeeded(data.serviceNeeded)} />
             <ReceiptRow label="Urgency" value={optionLabel(urgencyOptions, data.urgency)} />
             <ReceiptRow label="Current Issue / Description" value={data.message} />
           </dl>

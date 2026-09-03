@@ -1,4 +1,4 @@
-import { propertyTypes, referralOptions, serviceNeededOptions, urgencyOptions } from "@/lib/content";
+import { defaultServiceNeeded, noReferralSelected, propertyTypes, referralOptions, serviceNeededOptions, urgencyOptions } from "@/lib/content";
 
 function titleCaseSegment(value: string) {
   return value ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() : "";
@@ -30,6 +30,11 @@ export function formatServiceNeeded(value: string) {
   return optionLabel(serviceNeededOptions, value) ?? toTitleCase(value.replace(/-/g, " "));
 }
 
+export function formatServicesNeeded(values: string[] | null | undefined) {
+  if (!values?.length) return formatServiceNeeded(defaultServiceNeeded);
+  return values.map(formatServiceNeeded).join(", ");
+}
+
 export function formatUrgency(value: string) {
   return optionLabel(urgencyOptions, value) ?? toTitleCase(value.replace(/-/g, " "));
 }
@@ -38,7 +43,8 @@ export function formatPropertyType(value: string) {
   return optionLabel(propertyTypes, value) ?? toTitleCase(value.replace(/-/g, " "));
 }
 
-export function formatHowHeard(value: string) {
+export function formatHowHeard(value: string | null | undefined) {
+  if (!value || value === noReferralSelected) return noReferralSelected;
   return optionLabel(referralOptions, value) ?? toTitleCase(value.replace(/-/g, " "));
 }
 

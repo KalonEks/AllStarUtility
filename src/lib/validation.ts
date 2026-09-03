@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { propertyTypes, referralOptions, serviceNeededOptions, urgencyOptions } from "@/lib/content";
+import { defaultServiceNeeded, noReferralSelected, propertyTypes, referralOptions, serviceNeededOptions, urgencyOptions } from "@/lib/content";
 import { sanitizePhone, sanitizePlainText, sanitizeZip } from "@/lib/sanitize";
 import { minnesota } from "@/lib/site";
 import {
@@ -52,6 +52,38 @@ export const serviceNeededValues = optionValues(serviceNeededOptions);
 export const urgencyValues = optionValues(urgencyOptions);
 export const referralValues = optionValues(referralOptions);
 
+function coerceServiceNeeded(value: unknown): string[] {
+  if (Array.isArray(value)) return value.map((item) => sanitizePlainText(String(item), { max: 80 }));
+  if (typeof value === "string" && value.trim()) return [sanitizePlainText(value, { max: 80 })];
+  return [];
+}
+
+function serviceNeededField() {
+  return z
+    .unknown()
+    .transform((value) => coerceServiceNeeded(value))
+    .refine((values) => values.every((value) => (serviceNeededValues as readonly string[]).includes(value)), {
+      message: "Select a service.",
+    })
+    .transform((values) => {
+      const unique = [...new Set(values)];
+      if (unique.length === 0) return [defaultServiceNeeded];
+      if (unique.length > 1) return unique.filter((value) => value !== defaultServiceNeeded);
+      return unique;
+    });
+}
+
+function howHeardField() {
+  return z
+    .string()
+    .optional()
+    .transform((value) => sanitizePlainText(value ?? "", { max: 120 }))
+    .refine((value) => value === "" || (referralValues as readonly string[]).includes(value), {
+      message: "Select a referral source.",
+    })
+    .transform((value) => (value === "" ? noReferralSelected : value));
+}
+
 function plainText(max: number, options?: { min?: number; message?: string; multiline?: boolean }) {
   return z
     .string()
@@ -100,14 +132,14 @@ export const propertyDetailsStepSchema = z.object({
 });
 
 export const serviceDetailsStepSchema = z.object({
-  serviceNeeded: z.enum(serviceNeededValues, { message: "Select a service." }),
+  serviceNeeded: serviceNeededField(),
   urgency: z.enum(urgencyValues, { message: "Select an urgency level." }),
   message: plainText(4000, { min: 5, message: "Describe the current issue.", multiline: true }),
 });
 
 export const submitStepSchema = z.object({
   additionalDetails: optionalPlainText(4000, { multiline: true }),
-  howHeard: z.enum(referralValues).optional().or(z.literal("")),
+  howHeard: howHeardField(),
   consent: z.boolean().refine((value) => value, "Consent is required."),
   companyWebsite: z
     .string()
@@ -149,12 +181,12 @@ export const inquirySchema = z.object({
   state: minnesotaStateField(),
   zip: minnesotaZipField(),
   propertyType: z.enum(propertyTypeValues),
-  serviceNeeded: z.array(z.enum(serviceNeededValues)).min(1),
+  serviceNeeded: serviceNeededField(),
   urgency: z.enum(urgencyValues),
   message: plainText(4000, { min: 5, multiline: true }),
   currentIssue: optionalPlainText(500, { multiline: true }),
   bestContactTime: optionalPlainText(120),
-  howHeard: optionalPlainText(120),
+  howHeard: howHeardField(),
   consent: z.boolean().refine((value) => value, "Consent is required."),
   companyWebsite: z
     .string()
@@ -180,6 +212,7 @@ export const loginSchema = z.object({
 });
 
 export type ConsultationFormData = z.infer<typeof consultationFormSchema>;
-export type ConsultationFormState = Omit<ConsultationFormData, "serviceNeeded"> & {
-  serviceNeeded: ConsultationFormData["serviceNeeded"] | "";
+export type ConsultationFormState = Omit<ConsultationFormData, "serviceNeeded" | "howHeard"> & {
+  serviceNeeded: string[];
+  howHeard: string;
 };

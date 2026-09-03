@@ -9,7 +9,7 @@ import { FadeIn } from "@/components/motion";
 import { inquiries } from "@/db/schema";
 import { serviceNeededOptions, urgencyOptions } from "@/lib/content";
 import { getDb } from "@/lib/db";
-import { formatInquiryStatus, formatServiceNeeded, formatUrgency, toTitleCase } from "@/lib/display-format";
+import { formatInquiryStatus, formatServicesNeeded, formatUrgency, toTitleCase } from "@/lib/display-format";
 import { getSession } from "@/lib/security";
 import { formatUsNationalPhone } from "@/lib/us-contact";
 
@@ -107,7 +107,7 @@ export default async function InquiriesPage({
                           {row.email}
                         </>
                       </RowLinkCell>
-                      <RowLinkCell href={`/admin/inquiries/${row.id}`}>{row.serviceNeeded.map(formatServiceNeeded).join(", ")}</RowLinkCell>
+                      <RowLinkCell href={`/admin/inquiries/${row.id}`}>{formatServicesNeeded(row.serviceNeeded)}</RowLinkCell>
                       <RowLinkCell href={`/admin/inquiries/${row.id}`}>{formatUrgency(row.urgency)}</RowLinkCell>
                       <RowLinkCell href={`/admin/inquiries/${row.id}`}>{formatInquiryStatus(row.status)}</RowLinkCell>
                       <RowLinkCell href={`/admin/inquiries/${row.id}`}>{toTitleCase(row.city)}</RowLinkCell>

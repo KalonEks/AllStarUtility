@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { emailEvents, inquiries } from "@/db/schema";
+import { formatServiceNeeded } from "@/lib/display-format";
 import { getDb } from "@/lib/db";
 
 type InquiryRow = typeof inquiries.$inferSelect;
@@ -37,7 +38,7 @@ export async function sendInquiryEmail(inquiry: InquiryRow) {
         `Email: ${inquiry.email}`,
         `Address: ${inquiry.serviceAddress}, ${inquiry.city}, ${inquiry.state} ${inquiry.zip}`,
         `Property type: ${inquiry.propertyType}`,
-        `Service needed: ${inquiry.serviceNeeded.join(", ")}`,
+        `Service needed: ${inquiry.serviceNeeded.map((value) => formatServiceNeeded(value)).join(", ")}`,
         `Urgency: ${inquiry.urgency}`,
         `Message: ${inquiry.message}`,
         `Source: ${inquiry.utmSource || inquiry.source || "direct/unknown"}`,

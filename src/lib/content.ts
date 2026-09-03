@@ -104,6 +104,8 @@ export const serviceNeededOptions = [
   ["emergency-sewer-water", "Emergency Sewer / Water Issue"],
 ] as const;
 
+export const defaultServiceNeeded = serviceNeededOptions[0][0];
+
 export const propertyTypes = [
   ["residential", "Residential"],
   ["commercial", "Commercial"],
@@ -129,6 +131,8 @@ export const referralOptions = [
   ["truck-yard-sign", "Truck / Yard Sign"],
   ["other", "Other"],
 ] as const;
+
+export const noReferralSelected = "No referral selected";
 
 export const ctaServices = [
   "Sewer line repair",

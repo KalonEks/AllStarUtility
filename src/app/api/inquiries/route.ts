@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       message: data.message,
       currentIssue: data.currentIssue || null,
       bestContactTime: data.bestContactTime || null,
-      howHeard: data.howHeard || null,
+      howHeard: data.howHeard,
       source: data.utm_source || null,
       landingPage: data.landingPage || null,
       referrer: data.referrer || null,
