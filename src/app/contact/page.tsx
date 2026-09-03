@@ -17,7 +17,7 @@ export default function ContactPage() {
         showDivider={false}
         className="contact-page-hero"
         eyebrow="Schedule your free consultation"
-        title="Tell us what is happening at the property"
+        title="Tell us about the issue at the property"
         description={
           <>
             Use the form for project planning, quotes, and non-immediate requests. For active emergencies, call the

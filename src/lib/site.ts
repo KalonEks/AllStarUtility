@@ -8,7 +8,7 @@ export const business = {
   emergencyPhone: "651-248-1697",
   emergencyPhoneHref: "16512481697",
   fax: "612-460-9370",
-  email: "ryanboston63@gmail.com",
+  email: "jim@mb-servicesllc.com",
   primaryAddress: "27498 Olinda Trail, Lindstrom, MN 55045",
   secondaryAddress: "2038 Ford Parkway Ste. 322, St. Paul, MN 55116",
   founded: "2014",

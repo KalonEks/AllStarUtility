@@ -36,7 +36,7 @@ const content = {
   pipeLiningCallout: {
     eyebrow: "Lower-disruption repair option",
     title: "Sewer pipe lining may be an option on commercial sewer work",
-    body: "When the pipe condition allows it, CIPP lining can reduce excavation and help keep commercial properties moving.",
+    body: "When the pipe condition allows it, CIPP lining can reduce excavation and limit disruption for commercial properties.",
     href: "/sewer-pipe-lining",
     linkText: "How Lining Works",
     image: {

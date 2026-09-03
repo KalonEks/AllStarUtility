@@ -20,11 +20,11 @@ export default function AboutPage() {
         title="Family-owned utility contractor serving the Twin Cities"
         description={`Founded by ${business.founder} in ${business.founded}, All-Star Utilities handles sewer, water, excavation, and pipe lining work for residential and commercial customers.`}
       />
-      <section className="section-flow">
+      <section className="section-flow section-flow--after-divider">
         <div className="container-page">
-          <SectionHeading align="center" eyebrow="Approach" title="We keep the work accountable">
+          <SectionHeading align="center" eyebrow="Approach" title="Accountable work, from the owner on site">
             <p>
-              Over 20 years of sewer, water, and excavation experience. The owner/operator is involved on the job, and we do the work with our own crew.
+              Over 20 years of sewer, water, and excavation experience. The owner/operator is involved on site, and we do the work with our own crew.
             </p>
             <p className="mt-4">
               We also work alongside Boston Trucking when a project calls for trucking support.
@@ -43,7 +43,7 @@ export default function AboutPage() {
       </section>
       <section className="section-flow">
         <div className="container-page">
-          <SectionHeading align="center" eyebrow="Credentials" title="Licensed, bonded, certified." />
+          <SectionHeading align="center" eyebrow="Credentials" title="Licensed, Bonded, Certified." />
           <ul className="mx-auto mt-6 max-w-xl space-y-2 text-center text-sm font-bold text-white/82">
             {business.credentials.map((credential) => (
               <li key={credential}>{credential}</li>

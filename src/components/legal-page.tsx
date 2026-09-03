@@ -14,7 +14,7 @@ export function LegalPage({ title, updated, children }: { title: string; updated
         </div>
         <div className="flow-divider container-page mt-10" />
       </section>
-      <section className="section-flow pt-0">
+      <section className="section-flow section-flow--after-divider">
         <div className="container-page max-w-3xl">
           <FadeIn className="glass-panel grid gap-5 p-8 leading-8 text-white/82">{children}</FadeIn>
         </div>

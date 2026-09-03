@@ -19,7 +19,9 @@ export function InfoHero({
   const centered = align === "center";
 
   return (
-    <section className={`section-flow--tight relative overflow-hidden pt-8 md:pt-12 ${className || ""}`}>
+    <section
+      className={`section-flow--tight relative overflow-hidden pt-8 md:pt-12 ${showDivider ? "info-hero--divided" : ""} ${className || ""}`}
+    >
       <div className="container-page">
         <FadeIn className={centered ? "mx-auto max-w-3xl text-center" : undefined}>
           <p className="eyebrow">{eyebrow}</p>

@@ -17,7 +17,7 @@ export default function ServiceAreasPage() {
         title="Sewer and water service across Minneapolis, St. Paul, and the metro"
         description="We serve homeowners, commercial properties, contractors, and property managers across the Twin Cities metro."
       />
-      <section className="section-flow">
+      <section className="section-flow section-flow--after-divider">
         <div className="container-page">
           <SectionHeading align="center" eyebrow="Coverage" title="Areas we serve">
             <p>

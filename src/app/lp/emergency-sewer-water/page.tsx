@@ -11,7 +11,7 @@ export default function Page() {
     <LandingPage
       eyebrow="24/7 Emergency"
       urgent
-      title="Emergency Sewer and Water Help"
+      title="Emergency Sewer and Water Service"
       copy="For active backups, leaks, service interruptions, pooling water, or urgent sewer and water problems, call the emergency line first."
       defaultService="emergency-sewer-water"
     />

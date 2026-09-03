@@ -13,7 +13,7 @@ export const services = [
     href: "/commercial-sewer-water",
     icon: Building2,
     summary:
-      "We help property owners, managers, developers, contractors, and facilities teams keep sewer and water projects moving with less disruption.",
+      "Sewer and water work for property owners, managers, developers, contractors, and facilities teams, planned to limit disruption.",
   },
   {
     title: "Sewer Pipe Lining / CIPP",
@@ -34,7 +34,7 @@ export const services = [
     href: "/contact",
     icon: Wrench,
     summary:
-      "We take care of pipe repairs, pipe segment replacement, manholes, catch basins, storm sewers, water mains, and hydrant-related utility work.",
+      "We handle pipe repairs, pipe segment replacement, manholes, catch basins, storm sewers, water mains, and hydrant-related utility work.",
   },
   {
     title: "24/7 Emergency Service",
@@ -50,7 +50,7 @@ export const homeFeatured = [
     title: "Residential Sewer & Water",
     href: "/residential-sewer-water",
     summary:
-      "Repair, replace, install, and evaluate sewer laterals, water lines, storm work, and related utilities at the house.",
+      "Repair, replace, install, and evaluate sewer laterals, water lines, storm work, and related utilities at the property.",
     image: {
       src: "/images/home-work-residential-under.png",
       alt: "Residential sewer hole with a sheet-steel trench box set in with a pull-gap; white PVC in a sub-ditch under the box, not through the walls",
@@ -61,7 +61,7 @@ export const homeFeatured = [
     title: "Commercial Sewer & Water",
     href: "/commercial-sewer-water",
     summary:
-      "Property owners, managers, developers, contractors, and facilities teams — sewer and water work planned around access and disruption.",
+      "Sewer and water work for property owners, managers, developers, contractors, and facilities teams, planned around access and disruption.",
     image: {
       src: "/images/home-work-commercial-person-moved.png",
       alt: "Commercial parking-lot sewer pit with a sheet-steel trench box; worker standing on the asphalt at the rim; white PVC in dirt under the box beside an office building",
@@ -72,9 +72,9 @@ export const homeFeatured = [
 
 export const homeLining = {
   eyebrow: "When the pipe qualifies",
-  title: "Lining instead of digging up the whole line.",
+  title: "Line the pipe instead of replacing the entire line.",
   summary:
-    "CIPP lining restores a qualifying sewer from the inside. It is an option on residential or commercial work — not a third kind of job. In general it means less digging than a standard cut-and-replace, and it is often less expensive than replacing the entire line. We have to see the pipe before recommending it.",
+    "CIPP lining restores a qualifying sewer from the inside, without replacing the entire line. It is available for residential and commercial work, typically with less excavation than a standard cut-and-replace, and is often the more cost-effective option. We evaluate the pipe on site before recommending it.",
   href: "/sewer-pipe-lining",
   ctaLabel: "How Lining Works",
   image: {
@@ -121,7 +121,7 @@ export const urgencyOptions = [
 
 export const referralOptions = [
   ["ad", "Ad"],
-  ["word-of-mouth", "Word Of Mouth"],
+  ["word-of-mouth", "Word of Mouth"],
   ["social-media", "Social Media"],
   ["google-search", "Google Search"],
   ["return-customer", "Return Customer"],

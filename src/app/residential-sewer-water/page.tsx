@@ -5,7 +5,7 @@ const content = {
   description:
     "Residential sewer and water repair, replacement, installation, excavation, and pipe lining evaluation in the Twin Cities metro.",
   intro:
-    "We help homeowners figure out what is happening underground before a sewer or water problem turns into a bigger repair.",
+    "We help homeowners identify underground sewer and water issues before they become a larger repair.",
   defaultService: "sewer-line-repair",
   ctaTitle: "Request a free evaluation",
   bullets: [
@@ -32,7 +32,7 @@ const content = {
     "City notice or required utility correction",
   ],
   process: [
-    "Send us the address, what you are seeing, and how urgent it is.",
+    "Send us the property address, the issue, and how urgent it is.",
     "We review the site conditions, access, and repair options with you.",
     "We walk you through whether excavation, replacement, pipe lining, or more evaluation makes sense.",
   ],
@@ -44,7 +44,7 @@ const content = {
   pipeLiningCallout: {
     eyebrow: "Pipe lining option",
     title: "Sewer pipe lining may be an option on residential sewer work",
-    body: "If the existing sewer line is still a good candidate, CIPP lining can restore the inside of the pipe with less digging than full open replacement.",
+    body: "If the existing sewer line is still a good candidate, CIPP lining can restore the inside of the pipe with less excavation than full open replacement.",
     href: "/sewer-pipe-lining",
     linkText: "How Lining Works",
     image: {

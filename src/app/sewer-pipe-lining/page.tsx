@@ -6,6 +6,7 @@ import { CippLinkText } from "@/components/cipp-link-text";
 import { CtaBand } from "@/components/cta-band";
 import { InfoHero } from "@/components/info-hero";
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
+import { SectionHeading } from "@/components/section-heading";
 import { business } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -13,6 +14,29 @@ export const metadata: Metadata = {
   description:
     "How CIPP sewer pipe lining works, when it is an option on residential or commercial work, and when excavation may still be required.",
 };
+
+const permaLinerCredential =
+  business.credentials.find((credential) => credential.startsWith("Perma-Liner")) ??
+  "Perma-Liner Certification #701271";
+
+const expectations = [
+  {
+    heading: "Rehabilitation of the existing sewer",
+    body: "CIPP is a lining method for a buried pipe that is still a suitable host. The original line stays in the ground, and the cured liner becomes the new interior surface wastewater flows through.",
+  },
+  {
+    heading: "Typical installation sequence",
+    body: "Work starts from an access point, such as a cleanout or a small excavation. The pipe is cleaned and prepared, the liner is inserted and positioned against the host pipe, then cured. The finished line is inspected before it is returned to service.",
+  },
+  {
+    heading: "Liner and resin, cured in place",
+    body: `The liner is a flexible tube saturated with resin. Once it is in position, the resin hardens so the liner forms a continuous interior pipe wall. Crews match materials to the pipe and the job. All-Star Utilities holds ${permaLinerCredential} for this work.`,
+  },
+  {
+    heading: "What to plan for on site",
+    body: "Sewer service is interrupted while the work is underway. Small access pits may still be needed, and the finished interior is slightly smaller than the original pipe. Less excavation than full replacement is common when the pipe qualifies. Lining is not recommended if inspection finds collapse, a severe offset, standing water, or a pipe that cannot be prepared.",
+  },
+];
 
 const panels = [
   {
@@ -57,7 +81,7 @@ export default function PipeLiningPage() {
         className="pb-0"
         eyebrow="When the pipe qualifies"
         title="How Lining Works"
-        description="CIPP lining restores a qualifying sewer from the inside. It is an option on residential or commercial work, not a third kind of job. It can mean less digging than a full cut-and-replace. We have to see the pipe before recommending it."
+        description="CIPP lining restores a qualifying sewer from the inside, without replacing the entire line. It is available for residential and commercial work, typically with less excavation than a full cut-and-replace. We evaluate the pipe on site before recommending it."
       />
       <div className="container-page mt-8 flex flex-col items-center">
         <div className="flex w-full max-w-sm flex-col items-stretch gap-3 sm:max-w-none sm:w-auto sm:flex-row sm:items-center">
@@ -104,6 +128,25 @@ export default function PipeLiningPage() {
               </figcaption>
             </figure>
           </FadeIn>
+        </div>
+      </section>
+
+      <section className="section-flow">
+        <div className="container-page">
+          <SectionHeading align="center" eyebrow="If lining is selected" title="Process, materials, and what to expect">
+            <p>
+              When CIPP is recommended on residential or commercial sewer work, All-Star Utilities installs a liner
+              inside the existing pipe after the line is evaluated and prepared on site.
+            </p>
+          </SectionHeading>
+          <Stagger className="mt-8 grid gap-4 sm:grid-cols-2">
+            {expectations.map((item) => (
+              <StaggerItem key={item.heading} className="glass-panel p-5">
+                <h3 className="text-xl font-black">{item.heading}</h3>
+                <p className="mt-3 leading-7 text-white/78">{item.body}</p>
+              </StaggerItem>
+            ))}
+          </Stagger>
         </div>
       </section>
 

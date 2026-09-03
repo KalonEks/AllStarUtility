@@ -17,9 +17,9 @@ export default function FaqPage() {
         align="center"
         eyebrow="FAQ"
         title="Common customer questions"
-        description="Straight answers about sewer, water, excavation, and pipe lining work before you request a consultation."
+        description="Clear answers about sewer, water, excavation, and pipe lining work before you request a consultation."
       />
-      <section className="section-flow">
+      <section className="section-flow section-flow--after-divider">
         <div className="container-page grid gap-4">
           {faqs.map((faq, index) => (
             <FadeIn key={`${faq.category}-${faq.question}`} delay={index * 0.04}>

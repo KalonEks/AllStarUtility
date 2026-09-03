@@ -10,7 +10,7 @@ export default function Page() {
   return (
     <LandingPage
       title="Sewer Line Repair in the Twin Cities"
-      copy="Recurring backups, sewer smells, root intrusion, cracked pipe, and city notices deserve a practical evaluation before the repair path is chosen."
+      copy="Recurring backups, sewer odors, root intrusion, cracked pipe, and city notices should be evaluated before a repair path is selected."
       defaultService="sewer-line-repair"
     />
   );

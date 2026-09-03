@@ -20,7 +20,7 @@ export function LandingPage({
   return (
     <>
       <InfoHero align="center" eyebrow={eyebrow} title={title} description={copy} />
-      <section className="section-flow">
+      <section className="section-flow section-flow--after-divider">
         <div className="container-page grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <FadeIn className="grid content-start gap-6">
             <div className="glass-panel p-6">

@@ -9,7 +9,7 @@ export async function sendInquiryEmail(inquiry: InquiryRow) {
   const provider = process.env.EMAIL_PROVIDER || "resend";
   const apiKey = process.env.EMAIL_API_KEY;
   const from = process.env.EMAIL_FROM || "All-Star Utilities <no-reply@allstarutilities.com>";
-  const to = process.env.INQUIRY_TO_EMAIL || "CONTACT_EMAIL_PLACEHOLDER";
+  const to = process.env.INQUIRY_TO_EMAIL || "jim@mb-servicesllc.com";
   const subject = `New All-Star Utilities consultation inquiry - ${inquiry.urgency} - ${inquiry.city}`;
 
   if (!apiKey || provider !== "resend") {

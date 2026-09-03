@@ -196,8 +196,16 @@ a {
   padding-block: clamp(3.5rem, 8vw, 5.5rem);
 }
 
+.section-flow--after-divider {
+  padding-top: 0;
+}
+
 .section-flow--tight {
   padding-block: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.info-hero--divided {
+  padding-bottom: 2.5rem;
 }
 
 .contact-page-hero {
@@ -914,6 +922,10 @@ select.field optgroup {
   .section-pad,
   .section-flow {
     padding-block: 3rem;
+  }
+
+  .section-flow--after-divider {
+    padding-top: 0;
   }
 }
 

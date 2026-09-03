@@ -14,7 +14,7 @@ const warrantyLabel = warrantyLabelParts.join(" ");
 const trustFacts = [
   { value: business.founded, label: "Founded" },
   { value: "Family-owned", label: "and operated" },
-  { value: "Experienced Professionals", label: "that get the job done" },
+  { value: "Experienced Professionals", label: "on every project" },
   { value: warrantyValue, label: warrantyLabel },
 ];
 
@@ -66,7 +66,7 @@ export function HomePage() {
             <h1 className="heading-hero mt-4">Twin Cities sewer and water specialists.</h1>
             <p className="text-lead mt-5">
               Over 20 years of sewer, water, and excavation experience. Family-owned since {business.founded}, with an
-              owner/operator involved on the job and a crew that shows up.
+              owner/operator involved on site and our own crew.
             </p>
             <div className="home-hero__actions">
               <a className="button-secondary" href={`tel:${business.phoneHref}`}>
@@ -103,8 +103,8 @@ export function HomePage() {
         <div className="container-page">
           <SectionHeading align="center" eyebrow="Our Services" eyebrowClassName="eyebrow--lg" title="Residential or Commercial.">
             <p>
-              Those are the two kinds of jobs. On either one we can repair, replace, excavate, or line it from the
-              inside if the sewer qualifies.
+              We handle residential and commercial projects. For both, we repair, replace, excavate, or line a
+              qualifying sewer from the inside.
             </p>
           </SectionHeading>
           <Stagger className="home-paths">
@@ -145,7 +145,7 @@ export function HomePage() {
         <div className="container-page home-credentials__inner">
           <FadeIn>
             <p className="eyebrow">Credentials</p>
-            <h2 className="heading-section mt-3">Licensed, bonded, certified.</h2>
+            <h2 className="heading-section mt-3">Licensed, Bonded, Certified.</h2>
             <ul className="home-credentials__list">
               {business.credentials.map((credential) => (
                 <li key={credential}>{credential}</li>
@@ -162,7 +162,7 @@ export function HomePage() {
         <FadeIn className="container-page home-cta__inner">
           <h2 className="heading-section">Request a free site evaluation</h2>
           <p className="text-lead mt-4">
-            Send the address, what is happening, and how urgent it is. We serve Minneapolis, St. Paul, and surrounding
+            Send the property address, the issue, and how urgent it is. We serve Minneapolis, St. Paul, and surrounding
             neighborhoods.
           </p>
           <div className="home-cta__actions">

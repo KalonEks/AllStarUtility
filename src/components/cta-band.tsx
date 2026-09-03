@@ -11,7 +11,7 @@ export function CtaBand({ title = "Request a free site evaluation" }: { title?: 
           <div>
             <p className="heading-section">{title}</p>
             <p className="text-lead mt-3">
-              Send us the address, what is happening, and how urgent it is. We will review the details and follow up with the next step.
+              Send us the property address, the issue, and how urgent it is. We will review the details and follow up with the next step.
             </p>
           </div>
           <div className="flex w-full max-w-sm flex-col gap-3">
