@@ -337,6 +337,10 @@ button.field {
   max-height: 16rem;
   overflow: auto;
   padding: 0.4rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 0.65rem;
+  background: var(--bg-elevated);
+  box-shadow: 0 16px 32px rgb(0 0 0 / 0.45);
 }
 
 .service-needed-select__option {

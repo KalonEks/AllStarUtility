@@ -66,7 +66,7 @@ export function ServiceNeededSelect({
         <ChevronDown size={18} aria-hidden />
       </button>
       {open ? (
-        <div className="service-needed-select__menu glass-panel" id={listId} role="listbox" aria-multiselectable="true">
+        <div className="service-needed-select__menu" id={listId} role="listbox" aria-multiselectable="true">
           {serviceNeededOptions.map(([value, label]) => {
             const selected = values.includes(value);
             return (
